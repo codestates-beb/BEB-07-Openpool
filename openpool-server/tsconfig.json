@@ -10,5 +10,9 @@
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitReturns": false,
+    "strictPropertyInitialization": false,
   }
 }
