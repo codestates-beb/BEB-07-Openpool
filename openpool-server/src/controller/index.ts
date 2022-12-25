@@ -2,7 +2,8 @@ import AppDataSource from "../db/data-source";
 import {Request, Response} from "express";
 import User from "../entity/User";
 import web3 from "./web3";
-import { send } from "process";
+
+import NFTController from "./nft";
 
 export const addUser = async (req : Request, res: Response)=>{
     const address : string = req.body.address;
@@ -53,3 +54,5 @@ export const requestBalanceOf = async (req : Request, res : Response)=>{
         console.log(err);
     });
 }
+
+export {NFTController}
