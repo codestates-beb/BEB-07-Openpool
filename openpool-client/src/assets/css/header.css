@@ -1,11 +1,22 @@
 .searchbar {
     @apply py-2 pl-12 pr-4 w-full rounded-lg 
-    placeholder:italic placeholder:text-slate-400;
+    placeholder:text-slate-400;
+    position:relative;
 }
 
-.searchbar::before {
-    width: 2rem;
-    height: 2rem;
+.searchbar-wrapper {
+    @apply relative align-baseline;
+}
+
+.searchbar-wrapper::before {
+    position:absolute;
+    content: "\1F50D";
+    display:block;
+    text-align: baseline;
+    top: 0.4rem;
+    margin-left: 1rem;
+    z-index: 1;
+    font-size: 1.2rem;
 }
 
 navbar .link-group .link-item {
