@@ -16,6 +16,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
+      <div className="mt-24">
         <Routes>
           <Route path="/" element={<MainPage/>}/>
           <Route path="/mypage" element={<MyPage/>}/>
@@ -24,6 +25,7 @@ function App() {
           </Route>
           <Route path="/" element={<MainPage/>}/>
         </Routes>
+      </div>
       <Footer />
     </BrowserRouter>
   );
