@@ -9,19 +9,17 @@ const AppDataSource = new DataSource({
     database: "OPENPOOL",
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
-    synchronize: true,
     logging: true,
     entities: [User],
 })
 
-if (!AppDataSource.isInitialized){
-    AppDataSource.initialize()
+AppDataSource.initialize()
     .then(()=>{
+        console.log(AppDataSource.getMetadata(User));
         console.log("db init success");
+        AppDataSource.synchronize();
     })
     .catch((error)=> console.log(error));
-}
 
 
-
-export default AppDataSource
+export default AppDataSource;
