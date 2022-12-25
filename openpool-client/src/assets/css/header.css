@@ -9,7 +9,7 @@
 }
 
 navbar .link-group .link-item {
-    @apply mr-4
+    @apply mr-4 text-xl font-bold;
 }
 
 navbar .link-group .link-item:last-child{

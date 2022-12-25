@@ -2,6 +2,9 @@
   "short_name": "React App",
   "name": "Create React App Sample",
   "icons": [
+    {
+      "src" : "images/logo.png"
+    }
   ],
   "start_url": ".",
   "display": "standalone",
