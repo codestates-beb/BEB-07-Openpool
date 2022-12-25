@@ -1,4 +1,4 @@
-// Library
+// modules
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import './App.css';
 
@@ -11,19 +11,17 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import DetailPage from "./pages/DetailPage";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div className="mt-24">
+      <div className="mt-24 w-full">
         <Routes>
           <Route path="/" element={<MainPage/>}/>
           <Route path="/mypage" element={<MyPage/>}/>
           <Route path="/detail" element={<DetailPage/>}>
               <Route path=":id"/>
           </Route>
-          <Route path="/" element={<MainPage/>}/>
         </Routes>
       </div>
       <Footer />

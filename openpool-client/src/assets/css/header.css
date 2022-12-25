@@ -4,5 +4,14 @@
 }
 
 .searchbar::before {
-    
+    width: 2rem;
+    height: 2rem;
+}
+
+navbar .link-group .link-item {
+    @apply mr-4 text-xl font-bold;
+}
+
+navbar .link-group .link-item:last-child{
+    @apply mr-0;
 }
