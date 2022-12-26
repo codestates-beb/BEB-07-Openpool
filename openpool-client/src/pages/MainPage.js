@@ -1,5 +1,5 @@
 //modules
-import swiper from "swiper";
+// import swiper from "swiper";
 
 // 위의 swiper를 이용해서 슬라이드를 구현하세요!
 // swiper를 이용하면 손쉽게 슬라이드를 구현할 수 있습니다.
@@ -13,7 +13,7 @@ const MainPage = ()=>{
             <p className="text-5xl font-extrabold">Explore, collect, and sell NFTs</p>
         </div>
         <div className="main">
-
+       
         </div>
         </>
     )
