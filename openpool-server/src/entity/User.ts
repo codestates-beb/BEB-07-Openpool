@@ -7,4 +7,10 @@ export default class User {
     
     @Column()
     address: string
+
+    @Column()
+    nickname: string
+
+    @Column()
+    created_At: Date
 }

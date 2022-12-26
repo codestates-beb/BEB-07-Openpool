@@ -4,6 +4,7 @@ import User from "../entity/User";
 import web3 from "./web3";
 
 import NFTController from "./nft";
+import userController from "./user";
 
 export const addUser = async (req : Request, res: Response)=>{
     const address : string = req.body.address;
@@ -55,4 +56,4 @@ export const requestBalanceOf = async (req : Request, res : Response)=>{
     });
 }
 
-export {NFTController}
+export {NFTController, userController}
