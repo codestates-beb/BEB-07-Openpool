@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import crypto from "crypto";
+import web3 from "../config/web3";
 
 const createDummyData = (req : Request, res : Response)=>{
     const dummydata = crypto.randomBytes(16).toString("base64url");
@@ -9,11 +10,20 @@ const createDummyData = (req : Request, res : Response)=>{
 }
 
 const signup = (req : Request, res : Response)=>{
-    
+
 }
 
-const login = (req : Request, res : Response)=>{
-    
+const login = async (req : Request, res : Response)=>{
+    const {dummydata, signature, address} = req.body;
+    const addressVerified = web3.eth.accounts.recover(dummydata, signature)
+
+    if (addressVerified !== address){
+        return res.status(404).send("login failed");
+    } else {
+        // TODO jwt 발급
+
+        return res.status(202).send("login Success");
+    }
 }
 
 const logout = (req : Request, res : Response)=>{
