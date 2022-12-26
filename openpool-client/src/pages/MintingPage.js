@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
+// import web3 from 'web3';
 import "../assets/css/minting.css";
 
 
