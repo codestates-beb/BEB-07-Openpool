@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 import MainPage from "./pages/MainPage";
 import MyPage from "./pages/MyPage";
 import DetailPage from "./pages/DetailPage";
+import MintingPage from "./pages/MintingPage";
 
 // Custom Hooks
 import useMetamask from "./hooks/useMetamask";
@@ -44,9 +45,10 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage/>}/>
           <Route path="/mypage" element={<MyPage/>}/>
-          <Route path="/detail" element={<DetailPage/>}>
-              <Route path=":id"/>
-          </Route>
+          <Route path="/detail" element={<DetailPage/>}/>
+          <Route path="/minting" element={<MintingPage/>}/>
+              {/* <Route path=":id"/> */}
+          {/* </Route> */}
         </Routes>
       </div>
       <Footer />
