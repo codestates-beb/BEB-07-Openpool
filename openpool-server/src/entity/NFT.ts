@@ -19,6 +19,9 @@ export default class NFT{
 
     @Column()
     nft_tokenURI: string
+
+    @Column()
+    nft_external_url: string
     
     @Column()
     lastprice: number
