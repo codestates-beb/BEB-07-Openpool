@@ -4,11 +4,9 @@ const router : Router = express.Router();
 //controller
 import {userController} from "../controller/index";
 
-router.get("/randomBytes", userController.createDummyData);
+router.get("/datatosign", userController.createDataToSign);
 
-router.post("/login", (req: Request, res: Response)=>{
-    
-})
+router.post("/login", userController.login);
 
 router.post("/logout", (req: Request, res: Response)=>{
 
