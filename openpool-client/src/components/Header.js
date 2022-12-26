@@ -10,10 +10,10 @@ import UserCircleIcon from "@heroicons/react/24/outline/UserCircleIcon";
 // stylesheet
 import "../assets/css/header.css";
 
+
 const Header = ({loginHandler, isLogin})=>{
     // 헤더는 각 nav 요소에 원래 dropdown이 구현되어있습니다.
     // 가능하면 구현하는데 없어도 상관은 없을 듯 합니다.
-
 
     return (
         <header className="py-4 px-16 w-full flex justify-between items-center fixed top-0">
@@ -24,15 +24,15 @@ const Header = ({loginHandler, isLogin})=>{
                 <div className="logo-brand">
                     <Link to="/" className="text-2xl font-bold">OpenPool</Link>
                 </div>
-            </div>
+            </div>{/* 브랜드로고 */}
             <div className="searchbar-wrapper w-full px-16">
                 <input className="searchbar" placeholder="Search items, collections, and accounts"></input>
             </div>
-            <navbar>
+            <nav>
                 <ul className="link-group flex items-center">
                     <li className="link-item"><Link>Explore</Link></li>
                     <li className="link-item">
-                        <Link>
+                        <Link to="/Mypage">  
                             <UserCircleIcon className="h-10 w-10" onClick={loginHandler}/>
                         </Link>
                     </li>
@@ -42,12 +42,12 @@ const Header = ({loginHandler, isLogin})=>{
                         </Link>
                     </li>
                     <li className="link-item">
-                        <Link>
+                        <Link to="/mintingpage">
                             <ShopingCartIcon className="h-10 w-10"/>
                         </Link>
                     </li>
                 </ul>
-            </navbar>
+            </nav>
         </header>
     )    
 }

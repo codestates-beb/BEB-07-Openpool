@@ -1,16 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export default class User {
+export default class NFT_ATTRIBUTE{
     @PrimaryGeneratedColumn()
     id: number
-    
-    @Column()
-    address: string
 
     @Column()
-    nickname: string
+    nft_id: number
 
     @Column()
-    created_At: Date
+    trait_type: string
+
+    @Column()
+    value: string
 }
