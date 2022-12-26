@@ -14,8 +14,7 @@ require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
 // Static File GET request
-app.use(express.static("public"));
-
+app.use(express.static(__dirname + "/public"));
 app.use(cors(corsConfig));
 
 // Body parser

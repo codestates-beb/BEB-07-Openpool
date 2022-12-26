@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import User from "../entity/User";
+import NFT from "../entity/NFT";
+import NFT_ATTRIBUTE from "../entity/NFT_ATTRIBUTE";
 require("dotenv").config();
 
 const AppDataSource = new DataSource({
@@ -10,12 +12,11 @@ const AppDataSource = new DataSource({
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     logging: true,
-    entities: [User],
+    entities: [User, NFT, NFT_ATTRIBUTE],
 })
 
 AppDataSource.initialize()
     .then(()=>{
-        console.log(AppDataSource.getMetadata(User));
         console.log("db init success");
         AppDataSource.synchronize();
     })
