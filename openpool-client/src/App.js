@@ -51,7 +51,9 @@ function App() {
           {/* <Route path=":id"/> */}
           {/* </Route> */}
         </Routes>
+        
       </div>
+      <Footer/>
     </BrowserRouter>
   );
 }
