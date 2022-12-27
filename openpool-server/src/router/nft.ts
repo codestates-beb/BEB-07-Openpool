@@ -9,6 +9,8 @@ const upload = multer(multerConfig);
 // controller
 import {NFTController} from "../controller/index";
 
+router.get("/nfts", NFTController.getNFTs);
+
 router.post("/image", upload.single("image"), NFTController.uploadImage);
 
 router.post("/metadata", NFTController.createMetadata);

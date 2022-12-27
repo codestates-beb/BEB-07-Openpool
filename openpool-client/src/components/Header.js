@@ -42,7 +42,7 @@ const Header = ({loginHandler, isLogin})=>{
                         </Link>
                     </li>
                     <li className="link-item">
-                        <Link to="/mintingpage">
+                        <Link to="/minting">
                             <ShopingCartIcon className="h-10 w-10"/>
                         </Link>
                     </li>
