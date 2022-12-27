@@ -6,9 +6,9 @@ require("dotenv").config();
 
 const AppDataSource = new DataSource({
     type: "mysql",
-    host: "localhost",
+    host: "127.0.0.1",
     port: 3306,
-    database: "OPENPOOL",
+    database: "openPool",
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     logging: true,
