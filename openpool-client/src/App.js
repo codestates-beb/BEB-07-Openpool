@@ -41,8 +41,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header loginHandler={loginHandler} isLogin={isLogin} />
-      <div className="mt-24 w-full">
+      <Header loginHandler={loginHandler} isLogin={isLogin}/>
+      <div className="mt-24 w-full flex flex-col h-screen flex-grow">
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />

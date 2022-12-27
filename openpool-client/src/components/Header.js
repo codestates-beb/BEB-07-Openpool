@@ -16,7 +16,7 @@ const Header = ({loginHandler, isLogin})=>{
     // 가능하면 구현하는데 없어도 상관은 없을 듯 합니다.
 
     return (
-        <header className="py-4 px-16 w-full flex justify-between items-center fixed top-0">
+        <header className="py-4 px-16 w-full flex justify-between items-center position: absolute;">
             <div className="logo-group flex items-center">
                 <div className="logo-wrapper h-10 w-10 mr-2">
                     <Link to="/"><img className="w-full " src={process.env.PUBLIC_URL + "/images/logo.png"}/></Link>
@@ -30,7 +30,7 @@ const Header = ({loginHandler, isLogin})=>{
             </div>
             <nav>
                 <ul className="link-group flex items-center">
-                    <li className="link-item"><Link>Explore</Link></li>
+                    <li className="link-item"><Link to="/detail">Explore</Link></li>
                     <li className="link-item">
                         <Link to="/Mypage">  
                             <UserCircleIcon className="h-10 w-10" onClick={loginHandler}/>
