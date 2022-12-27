@@ -4,8 +4,8 @@ import "../assets/css/footer.css";
 
 const Footer = ()=>{
     return (
-    <body class="align-items: center; flex flex-col min-h-screen">
-      <footer className="grid place-items-center text-center bg-gray-900 text-white w-screen">
+  
+  <footer className="grid place-items-center text-center bg-gray-900 text-white w-screen h-25">
   <div className="container px-6 pt-6">
     <div className="flex justify-center mb-6">
       <a href="#!" type="button" className="rounded-full border-2 border-white text-white leading-normal uppercase hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-9 h-9 m-1">
@@ -223,7 +223,7 @@ const Footer = ()=>{
     <a className="text-white" href="https://tailwind-elements.com/">Openpool PR</a>
   </div>
 </footer>
-// </body>
+
     )
 }
 

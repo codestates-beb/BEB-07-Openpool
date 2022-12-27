@@ -36,7 +36,7 @@ function App() {
 
     console.log(account);
 
-    // TODO
+  
   };
 
   return (
@@ -51,7 +51,6 @@ function App() {
           {/* <Route path=":id"/> */}
           {/* </Route> */}
         </Routes>
-        
       </div>
       <Footer/>
     </BrowserRouter>
