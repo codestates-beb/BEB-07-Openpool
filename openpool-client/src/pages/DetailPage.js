@@ -1,7 +1,6 @@
 import "../assets/css/detail.css";
 import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
-import Web3 from 'web3';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
 
