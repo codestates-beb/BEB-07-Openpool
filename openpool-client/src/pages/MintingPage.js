@@ -132,5 +132,4 @@ function Minting() {
     );
   };
 
-export default Minting
-
+export default Minting;
