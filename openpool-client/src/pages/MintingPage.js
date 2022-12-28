@@ -13,22 +13,104 @@ function Minting() {
     const [nftName, setNftName] = useState("");
     const [description, setDescription] = useState("");
 
-    const isLogin = useState(false);
-    const web3 = useMetamask();
-    
-    const loginHandler = async()=> {
-    const account = await web3 
-      .request({
-        method: "eth_requestAccounts",
-      })
-      .then((result)=> result)
-      .catch((err)=>err);
-      console.log(account);
+    // imgPreView
+    const [imgBase64, setImgBase64] = useState(''); 
+    const [imgFile, setImgFile] = useState(null);
 
+    const handleChangeFile = (e) => {
+      let reader = new FileReader();
+
+      reader.onload = () =>{
+        const base64 = reader.result;
+        if(base64) {
+          setImgBase64(base64.toString());
+        }
+      }
+      if(e.target.files[0]){
+        reader.readAsDataURL(e.target.files[0]);
+        setImgFile(e.target.files[0])
+      }
     }
 
+    //Web3 관련
+    const [accessToken, setAccessToken] = useState("");
+    const [isLogin, setIsLogin] = useState(false);
+    const web3 = useMetamask();
+    
+    // const loginHandler = async()=> {
+    // const account = await web3 
+    //   .request({
+    //     method: "eth_requestAccounts",
+    //   })
+    //   .then((result)=> result)
+    //   .catch((err)=>err);
+    //   console.log(account);
 
-    // // Goerli network가 아니라면 전환
+    // }
+
+    const loginHandler = async () => {
+      // 현재 클라이언트 웹페이지에 계정을 연동하는 것 까지는 구현되었으나
+      // 서버에서 신원인증 토큰을 발급받는 부분은 구현이 안 되어 있습니다.
+  
+      const account = await web3
+        .request({
+          method: "eth_requestAccounts",
+        })
+        .then((result) => result)
+        .catch((err) => err);
+  
+      const dataToSign = await axios.get("http://localhost:4000/user/datatosign")
+      .then(result=>result.data)
+      .catch(err=>err);
+      
+      const signature = await web3.request({method:"personal_sign", params:[dataToSign, account[0]]})
+      .then(result=>result)
+      .catch(console.log)
+  
+      if (!signature) return;
+  
+      const loginResult = await axios
+      .post("http://localhost:4000/user/login", {
+        dataToSign, signature, address: account[0]
+      }, {withCredentials: true})
+      .then(result=>{
+        return result.data;
+      })
+      .catch(console.log)
+  
+      if (!loginResult) return;
+  
+      setIsLogin(true);
+      setAccessToken(loginResult.data.accessToken);
+    };
+    
+    const logoutHandler = async ()=>{
+      const result = await axios.post("http://localhost:4000/user/logout",{}, {withCredentials:true})
+      .then(result=>{
+        return result.data;
+      })
+      .catch(console.log)
+  
+      if (!result) return;
+  
+      setIsLogin(false);
+      setAccessToken("");
+    }
+  
+    useEffect(()=>{
+      (async()=>{
+        const result = await axios.post("http://localhost:4000/user/verify",{},{withCredentials:true})
+        .then(result=>{return result.data})
+        .catch(console.log);
+  
+        if (!result) return;
+  
+        setIsLogin(true);
+        setAccessToken(result.data.accessToken);
+      })()
+    },[])
+  
+    // Goerli network가 아니라면 전환
     // const chainId = async window.ethereum.request({ method: "eth_chainId" })
     // console.log("chainId: ", chainId);
     // if(chainId !== '0x5') // 0x5 가 Goerli
@@ -36,7 +118,7 @@ function Minting() {
     //     method: "wallet_switchEthereumChain",
     //     params: [{chainId: '0x5'}]
     //   });
-    // }
+    // };
 
 
 
@@ -140,7 +222,22 @@ function Minting() {
                       </select>
                     </div>
 
-                  <div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label htmlFor="collection" className="block text-sm font-medium text-gray-700">
+                        Price
+                      </label>
+                      <select
+                        id="collection"
+                        name="collection"
+                        autoComplete="collection-name"
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                      >
+                        
+                        <option>1.0 Eth (Goerli) </option>
+                      </select>
+                    </div>
+
+                  <div className="Minting" onChange={handleChangeFile}>
                     <label className="block text-sm font-medium text-gray-700">Main Image</label>
                     
                     <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
@@ -163,14 +260,14 @@ function Minting() {
                         </svg>
                         <div className="flex text-sm text-gray-600">
                           <label
-                            onChange={(e)=> setImgSrc(e.target.value)} value = {imgSrc}
                             htmlFor="file-upload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                           >
+                            <input type="file" name="imgFile" id="imgFile" onChange={handleChangeFile}/>
                             <span>Upload a file</span>
                             <input id="file-upload" name="file-upload" type="file" className="sr-only" />
                           </label>
-                          <p className="pl-1">or drag and drop</p>
+                          <p className="pl-1"></p>
                         </div>
                         <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                       </div>
