@@ -3,42 +3,40 @@ import axios from 'axios';
 import "../assets/css/minting.css";
 import { FormGroup, Label, Input, Card, CardBody, Button } from "reactstrap";
 
-
+import useMetamask from "../hooks/useMetamask"
 
 // 이름 링크 설명 블록체인 
 function Minting() {
 
-    const baseImage = "https://icons-for-free.com/download-icon-file-131964752888364301_512.png";
-    const [imgSrc, setImgSrc] = useState(baseImage);
+  
+    const [imgSrc, setImgSrc] = useState("");
     const [nftName, setNftName] = useState("");
     const [description, setDescription] = useState("");
-    const [waitNftMinting, setWaitNftMinting] = useState(false);
-    const [successMinting, setSuccessMinting] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        if(typeof window.ethereum !== "undefined"){
-          try{
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      }, []);
+    const isLogin = useState(false);
+    const web3 = useMetamask();
     
-      const changeNftName = (e) => {
-        setNftName(e.value);
-      };
+    const loginHandler = async()=> {
+    const account = await web3 
+      .request({
+        method: "eth_requestAccounts",
+      })
+      .then((result)=> result)
+      .catch((err)=>err);
+      console.log(account);
 
-      const chageDescription = (e) => {
-        setDescription(e.value);
-      }
-      
-      const checkElement = () => {
-        if( nftName && imgSrc && description) {
-            return true;
-        }
-        return false;
-      }
+    }
+
+
+    // // Goerli network가 아니라면 전환
+    // const chainId = async window.ethereum.request({ method: "eth_chainId" })
+    // console.log("chainId: ", chainId);
+    // if(chainId !== '0x5') // 0x5 가 Goerli
+    //   await window.ethereum.request({
+    //     method: "wallet_switchEthereumChain",
+    //     params: [{chainId: '0x5'}]
+    //   });
+    // }
 
 
 
@@ -48,6 +46,22 @@ function Minting() {
             method: "eth_requestAccounts",
         });
         console.log(accounts[0]);
+      }
+      
+      const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if(!nftName || !description || !imgSrc) return
+        console.log("Creating NFT...")
+
+
+      }
+
+
+      const resetForm = () =>{
+        setNftName('')
+        setDescription('')
+        setImgSrc(null)
       }
 
       
@@ -73,7 +87,9 @@ function Minting() {
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-3 gap-6">
                     <div className="col-span-3 sm:col-span-2">
-                      <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
+                      <label 
+                      onChange={(e)=> setNftName(e.target.value)} value = {nftName}
+                      htmlFor="company-website" className="block text-sm font-medium text-gray-700">
                         Name
                       </label>
                       <div className="mt-1 flex rounded-md shadow-sm">
@@ -90,7 +106,8 @@ function Minting() {
                   </div>
 
                   <div>
-                    <label htmlFor="about" className="block text-sm font-medium text-gray-700">
+                    <label onChange={(e)=> setDescription(e.target.value)} value = {description}  
+                    htmlFor="about" className="block text-sm font-medium text-gray-700">
                       Description
                     </label>
                     <div className="mt-1">
@@ -125,7 +142,10 @@ function Minting() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Main Image</label>
+                    
                     <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                      
+
                       <div className="space-y-1 text-center">
                         <svg
                           className="mx-auto h-12 w-12 text-gray-400"
@@ -143,6 +163,7 @@ function Minting() {
                         </svg>
                         <div className="flex text-sm text-gray-600">
                           <label
+                            onChange={(e)=> setImgSrc(e.target.value)} value = {imgSrc}
                             htmlFor="file-upload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                           >
@@ -158,6 +179,8 @@ function Minting() {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
+                    loginHandler={loginHandler} isLogin={isLogin}
+                    onClick={handleSubmit} // 서버쪽으로 넘어가야함
                     type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
