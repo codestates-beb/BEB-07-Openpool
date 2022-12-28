@@ -12,13 +12,13 @@ const AppDataSource = new DataSource({
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     logging: true,
+    synchronize: true,
     entities: [User, NFT, NFT_Traits],
 })
 
 AppDataSource.initialize()
     .then(()=>{
         console.log("db init success");
-        AppDataSource.synchronize();
     })
     .catch((error)=> console.log(error));
 
