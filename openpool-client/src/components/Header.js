@@ -28,7 +28,7 @@ const Header = ({userHandler, isLogin})=>{
                 </div>
             </div>{/* 브랜드로고 */}
             <div className="searchbar-wrapper w-full px-16">
-                <input className="searchbar" placeholder="Search items, collections, and accounts"></input>
+                <input className="searchbar" placeholder="Search items, collections, and accounts" disabled={true}></input>
             </div>
             <nav>
                 <ul className="link-group flex items-center">

@@ -1,152 +1,129 @@
+//modules
 import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
+
+//css
 import "../assets/css/minting.css";
 import { FormGroup, Label, Input, Card, CardBody, Button } from "reactstrap";
 
+//contracts
+import openNFTABI from "../contracts/openNFTABI.json"
+import openNFTBytesCode from "../contracts/openNFTBytescode.json";
+
+//hooks
 import useMetamask from "../hooks/useMetamask"
 
 // 이름 링크 설명 블록체인 
 function Minting() {
+  const [nftName, setNftName] = useState("");
+  const [imgSrc, setImgSrc] = useState("");
+  const [description, setDescription] = useState("");
 
-  
-    const [imgSrc, setImgSrc] = useState("");
-    const [nftName, setNftName] = useState("");
-    const [description, setDescription] = useState("");
+  // imgPreView
+  const [imgBase64, setImgBase64] = useState(''); 
+  const [imgFile, setImgFile] = useState(null);
 
-    // imgPreView
-    const [imgBase64, setImgBase64] = useState(''); 
-    const [imgFile, setImgFile] = useState(null);
+  const handleChangeFile = (e) => {
+    let reader = new FileReader();
 
-    const handleChangeFile = (e) => {
-      let reader = new FileReader();
-
-      reader.onload = () =>{
-        const base64 = reader.result;
-        if(base64) {
-          setImgBase64(base64.toString());
-        }
-      }
-      if(e.target.files[0]){
-        reader.readAsDataURL(e.target.files[0]);
-        setImgFile(e.target.files[0])
+    reader.onload = () =>{
+      const base64 = reader.result;
+      if(base64) {
+        setImgBase64(base64.toString());
       }
     }
-
-    //Web3 관련
-    const [accessToken, setAccessToken] = useState("");
-    const [isLogin, setIsLogin] = useState(false);
-    const web3 = useMetamask();
-    
-    // const loginHandler = async()=> {
-    // const account = await web3 
-    //   .request({
-    //     method: "eth_requestAccounts",
-    //   })
-    //   .then((result)=> result)
-    //   .catch((err)=>err);
-    //   console.log(account);
-
-    // }
-
-    const loginHandler = async () => {
-      // 현재 클라이언트 웹페이지에 계정을 연동하는 것 까지는 구현되었으나
-      // 서버에서 신원인증 토큰을 발급받는 부분은 구현이 안 되어 있습니다.
-  
-      const account = await web3
-        .request({
-          method: "eth_requestAccounts",
-        })
-        .then((result) => result)
-        .catch((err) => err);
-  
-      const dataToSign = await axios.get("http://localhost:4000/user/datatosign")
-      .then(result=>result.data)
-      .catch(err=>err);
-      
-      const signature = await web3.request({method:"personal_sign", params:[dataToSign, account[0]]})
-      .then(result=>result)
-      .catch(console.log)
-  
-      if (!signature) return;
-  
-      const loginResult = await axios
-      .post("http://localhost:4000/user/login", {
-        dataToSign, signature, address: account[0]
-      }, {withCredentials: true})
-      .then(result=>{
-        return result.data;
-      })
-      .catch(console.log)
-  
-      if (!loginResult) return;
-  
-      setIsLogin(true);
-      setAccessToken(loginResult.data.accessToken);
-    };
-    
-    const logoutHandler = async ()=>{
-      const result = await axios.post("http://localhost:4000/user/logout",{}, {withCredentials:true})
-      .then(result=>{
-        return result.data;
-      })
-      .catch(console.log)
-  
-      if (!result) return;
-  
-      setIsLogin(false);
-      setAccessToken("");
+    if(e.target.files[0]){
+      reader.readAsDataURL(e.target.files[0]);
+      setImgFile(e.target.files[0])
     }
+  }
+
+  //Web3 관련
+  const metamask = useMetamask();
   
-    useEffect(()=>{
-      (async()=>{
-        const result = await axios.post("http://localhost:4000/user/verify",{},{withCredentials:true})
-        .then(result=>{return result.data})
-        .catch(console.log);
+
+  // Goerli network가 아니라면 전환
+  // const chainId = async window.ethereum.request({ method: "eth_chainId" })
+  // console.log("chainId: ", chainId);
+  // if(chainId !== '0x5') // 0x5 가 Goerli
+  //   await window.ethereum.request({
+  //     method: "wallet_switchEthereumChain",
+  //     params: [{chainId: '0x5'}]
+  //   });
+  // };
+
+  async function Minting(){
+    // metamask연결 > accounts[0]이 연결된 account
+    const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+    });
+    console.log(accounts[0]);
+  }
   
-        if (!result) return;
-  
-        setIsLogin(true);
-        setAccessToken(result.data.accessToken);
-      })()
-    },[])
-  
-    // Goerli network가 아니라면 전환
-    // const chainId = async window.ethereum.request({ method: "eth_chainId" })
-    // console.log("chainId: ", chainId);
-    // if(chainId !== '0x5') // 0x5 가 Goerli
-    //   await window.ethereum.request({
-    //     method: "wallet_switchEthereumChain",
-    //     params: [{chainId: '0x5'}]
-    //   });
-    // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if(!nftName || !description || !imgSrc) return
+    console.log("Creating NFT...")
 
 
-
-      async function Minting(){
-        // metamask연결 > accounts[0]이 연결된 account
-        const accounts = await window.ethereum.request({
-            method: "eth_requestAccounts",
-        });
-        console.log(accounts[0]);
-      }
-      
-      const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if(!nftName || !description || !imgSrc) return
-        console.log("Creating NFT...")
+  }
 
 
-      }
+  const resetForm = () =>{
+    setNftName('')
+    setDescription('')
+    setImgSrc(null)
+  }
 
+  // 컨트랙트 생성에 필요한 함수입니다.
+  // 컨트랙트를 생성하는 트랜잭션 주소를 반환합니다.
+  const createContract = async ()=>{
+    const account = await metamask.request({method:"eth_requestAccounts"})
+    const curAccount = account[0];
+    if(!curAccount) return;
 
-      const resetForm = () =>{
-        setNftName('')
-        setDescription('')
-        setImgSrc(null)
-      }
+    const estimateGasfee = await metamask.request({
+        method:"eth_estimateGas", 
+        params:[{from: curAccount, data : "0x"+openNFTBytesCode.object}]
+    })
+    
+    const createContractTxHash = await metamask.request({
+        method:"eth_sendTransaction", 
+        params:[{
+            from:curAccount, 
+            gas:estimateGasfee, 
+            data: "0x"+openNFTBytesCode.object
+        }]
+    })
 
-      
+    
+    return createContractTxHash;
+};
+
+// 이미지를 업로드 할 때 필요한 함수입니다.
+const imageUpload= async() =>{
+    
+}
+
+// 메타데이터를 업로드 할 때 필요한 함수입니다.
+const createMetadata = async ()=>{
+    const result = axios.post("http://localhost:4000/nft/metadata",{
+        name: nftName,
+        external_url: "http://openpool.com/",
+        description: description,
+        image: imgSrc,
+        attributes: []
+    })
+    .then(result=>result.data)
+    .catch(console.log);
+
+    return result.url;
+}
+
+const mintingNFT = ()=>{
+
+}
 
     return(
       <>
@@ -276,7 +253,6 @@ function Minting() {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
-                    loginHandler={loginHandler} isLogin={isLogin}
                     onClick={handleSubmit} // 서버쪽으로 넘어가야함
                     type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
