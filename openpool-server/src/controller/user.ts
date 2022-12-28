@@ -31,6 +31,7 @@ const login = async (req : Request, res : Response)=> {
 
 const logout = (req : Request, res : Response)=>{
   const refreshToken = req.cookies.refreshToken;
+
   if(!refreshToken) {
     return res.status(400).send({message: "refresh token not provided"});
   }

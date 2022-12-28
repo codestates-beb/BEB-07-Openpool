@@ -3,7 +3,8 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 
 // Heroicons
-import WalletIcon from "@heroicons/react/24/outline/WalletIcon";
+import WalletIconOutline from "@heroicons/react/24/outline/WalletIcon";
+import WalletIconSolid from "@heroicons/react/24/solid/WalletIcon";
 import ShopingCartIcon from "@heroicons/react/24/outline/ShoppingCartIcon"
 import UserCircleIconOutline from "@heroicons/react/24/outline/UserCircleIcon";
 import UserCircleIconSolid from "@heroicons/react/24/solid/UserCircleIcon";
@@ -34,15 +35,15 @@ const Header = ({userHandler, isLogin})=>{
                     <li className="link-item"><Link to="/detail">Explore</Link></li>
                     <li className="link-item">
                         <Link to="/Mypage">
-                            {isLogin ?  
-                                <UserCircleIconSolid className="h-10 w-10" onClick={userHandler}/>  
-                                :<UserCircleIconOutline className="h-10 w-10" onClick={userHandler}/>
-                            }
+                            <UserCircleIconOutline className="h-10 w-10" />
                         </Link>
                     </li>
                     <li className="link-item">
                         <Link>
-                            <WalletIcon className="h-10 w-10"/>
+                            {isLogin ? 
+                                <WalletIconSolid className="h-10 w-10" onClick={userHandler}/>
+                                : <WalletIconOutline className="h-10 w-10" onClick={userHandler}/>
+                            }
                         </Link>
                     </li>
                     <li className="link-item">

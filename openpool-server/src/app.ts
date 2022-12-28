@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import morgan from 'morgan';
 import router from "./router/index";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 // configs
 import corsConfig from "./config/corsConfig";
@@ -20,6 +21,9 @@ app.use(cors(corsConfig));
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+
+// Cookie parser
+app.use(cookieParser());
 
 // Server Log
 app.use(morgan("dev"));

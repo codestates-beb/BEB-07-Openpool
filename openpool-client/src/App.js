@@ -1,5 +1,5 @@
 // modules
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
@@ -48,7 +48,7 @@ function App() {
     const loginResult = await axios
     .post("http://localhost:4000/user/login", {
       dataToSign, signature, address: account[0]
-    })
+    }, {withCredentials: true})
     .then(result=>{
       return result.data;
     })
@@ -61,15 +61,30 @@ function App() {
   };
   
   const logoutHandler = async ()=>{
-    const result = await axios.post("http://localhost:4000/user/logout",{})
+    const result = await axios.post("http://localhost:4000/user/logout",{}, {withCredentials:true})
     .then(result=>{
       return result.data;
     })
     .catch(console.log)
 
+    if (!result) return;
+
     setIsLogin(false);
     setAccessToken("");
   }
+
+  useEffect(()=>{
+    (async()=>{
+      const result = await axios.post("http://localhost:4000/user/verify",{},{withCredentials:true})
+      .then(result=>{return result.data})
+      .catch(console.log);
+
+      if (!result) return;
+
+      setIsLogin(true);
+      setAccessToken(result.data.accessToken);
+    })()
+  },[])
 
   return (
     <BrowserRouter>
