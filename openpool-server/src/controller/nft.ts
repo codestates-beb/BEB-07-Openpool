@@ -75,6 +75,7 @@ const createMetadata = (req : Request, res : Response)=>{
         path.join(__dirname + "/../../public/json", filename),
         metadataJSON,
     );
+    
 
     return res.status(202).send({filename});
 }
