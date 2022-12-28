@@ -13,6 +13,8 @@ function Minting() {
     const [nftName, setNftName] = useState("");
     const [description, setDescription] = useState("");
 
+    const [image_url, setImageUrl] = useState(""); // 서버에서 받아오는 이미지
+
     // imgPreView
     const [imgBase64, setImgBase64] = useState(''); 
     const [imgFile, setImgFile] = useState(null);
