@@ -5,13 +5,14 @@ import {Link} from "react-router-dom";
 // Heroicons
 import WalletIcon from "@heroicons/react/24/outline/WalletIcon";
 import ShopingCartIcon from "@heroicons/react/24/outline/ShoppingCartIcon"
-import UserCircleIcon from "@heroicons/react/24/outline/UserCircleIcon";
+import UserCircleIconOutline from "@heroicons/react/24/outline/UserCircleIcon";
+import UserCircleIconSolid from "@heroicons/react/24/solid/UserCircleIcon";
 
 // stylesheet
 import "../assets/css/header.css";
 
 
-const Header = ({loginHandler, isLogin})=>{
+const Header = ({userHandler, isLogin})=>{
     // 헤더는 각 nav 요소에 원래 dropdown이 구현되어있습니다.
     // 가능하면 구현하는데 없어도 상관은 없을 듯 합니다.
 
@@ -32,8 +33,11 @@ const Header = ({loginHandler, isLogin})=>{
                 <ul className="link-group flex items-center">
                     <li className="link-item"><Link to="/detail">Explore</Link></li>
                     <li className="link-item">
-                        <Link to="/Mypage">  
-                            <UserCircleIcon className="h-10 w-10" onClick={loginHandler}/>
+                        <Link to="/Mypage">
+                            {isLogin ?  
+                                <UserCircleIconSolid className="h-10 w-10" onClick={userHandler}/>  
+                                :<UserCircleIconOutline className="h-10 w-10" onClick={userHandler}/>
+                            }
                         </Link>
                     </li>
                     <li className="link-item">

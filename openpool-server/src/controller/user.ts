@@ -17,8 +17,8 @@ const signup = (req : Request, res : Response)=>{
 
 const login = async (req : Request, res : Response)=> {
     const {dataToSign, signature, address} = req.body;
-    const addressVerified = web3.eth.accounts.recover(dataToSign, signature)
-
+    const addressVerified = web3.eth.accounts.recover(dataToSign, signature).toLowerCase()
+    
     if (addressVerified !== address){
         return res.status(404).send("login failed");
     } else {
