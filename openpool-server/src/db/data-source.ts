@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import User from "../entity/User";
 import NFT from "../entity/NFT";
 import NFT_Traits from "../entity/NFT_Traits";
+import Contract from "../entity/Contract";
 require("dotenv").config();
 
 const AppDataSource = new DataSource({
@@ -12,13 +13,13 @@ const AppDataSource = new DataSource({
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     logging: true,
-    synchronize: true,
-    entities: [User, NFT, NFT_Traits],
+    entities: [User, NFT, NFT_Traits, Contract],
 })
 
 AppDataSource.initialize()
     .then(()=>{
         console.log("db init success");
+        AppDataSource.synchronize();
     })
     .catch((error)=> console.log(error));
 
