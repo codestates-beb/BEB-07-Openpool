@@ -16,6 +16,8 @@ import MyPage from "./pages/MyPage";
 import DetailPage from "./pages/DetailPage";
 import MintingPage from "./pages/MintingPage";
 
+import TestPage from "./pages/TestPage";
+
 // Custom Hooks
 import useMetamask from "./hooks/useMetamask";
 
@@ -99,6 +101,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/detail" element={<DetailPage />} />
           <Route path="/minting" element={<MintingPage />} />
+          <Route path="/test" element={<TestPage />} />
           {/* <Route path=":id"/> */}
           {/* </Route> */}
         </Routes>
