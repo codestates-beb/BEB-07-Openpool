@@ -7,6 +7,10 @@ const cookieParser = require('cookie-parser');
 
 router.use(cookieParser());
 
+router.use("/address", userController.requestAddrInfo);
+
+router.use("/balance", userController.requestBalanceOf);
+
 router.get("/datatosign", userController.createDataToSign);
 
 router.post("/login", userController.login);

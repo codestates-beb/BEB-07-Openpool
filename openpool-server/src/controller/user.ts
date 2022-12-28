@@ -34,6 +34,42 @@ async function isUser(address : string){
   else return true;
 }
 
+export const requestAddrInfo = async (req : Request, res: Response)=>{
+  const address : string = req.body.address;
+
+  const curBlockNumber : number = await web3.eth.getBlockNumber();
+  const fromBlock : number = curBlockNumber - 1000;
+  const toBlock : number = curBlockNumber;
+
+  console.log(address);
+
+  return await web3.eth.getPastLogs({
+      fromBlock: 8098260,
+      toBlock: 8098260,
+      address
+  }, (error : Error, logs)=>{
+      if (error) console.log(error)
+      else {
+          console.log(logs)
+          res.status(200).send(logs);
+      };
+  })
+}
+
+export const requestBalanceOf = async (req : Request, res : Response)=>{
+  const address : string = req.body.address;
+
+  console.log(address);
+  return await web3.eth.getBalance(address)
+  .then(result=>{
+      console.log(result);
+      res.status(200).send(result);
+  })
+  .catch(err =>{
+      console.log(err);
+  });
+}
+
 const createDataToSign = (req : Request, res : Response)=>{
     const dataToSign = crypto.randomBytes(16).toString("base64url");
     if (dataToSign.length < 1 || !dataToSign) return res.status(404).send("더미데이터를 생성하지 못 했습니다.");
@@ -84,6 +120,8 @@ const verify = (req : Request, res : Response)=>{
 };
 
 export default {
+    requestBalanceOf,
+    requestAddrInfo,
     createDataToSign,
     signup,
     login,
