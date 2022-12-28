@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
 import axios from 'axios';
-import Web3 from 'web3';
 import "../assets/css/minting.css";
 import { FormGroup, Label, Input, Card, CardBody, Button } from "reactstrap";
 
@@ -16,13 +15,10 @@ function Minting() {
     const [waitNftMinting, setWaitNftMinting] = useState(false);
     const [successMinting, setSuccessMinting] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [web3, setWeb3] = useState();
 
     useEffect(() => {
         if(typeof window.ethereum !== "undefined"){
           try{
-            const web = new Web3(window.ethereum);
-            setWeb3(web);
           } catch (err) {
             console.log(err);
           }

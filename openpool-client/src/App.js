@@ -20,7 +20,8 @@ import MintingPage from "./pages/MintingPage";
 import useMetamask from "./hooks/useMetamask";
 
 function App() {
-  const isLogin = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
   const web3 = useMetamask();
 
   const loginHandler = async () => {
@@ -34,14 +35,49 @@ function App() {
       .then((result) => result)
       .catch((err) => err);
 
-    console.log(account);
+    const dataToSign = await axios.get("http://localhost:4000/user/datatosign")
+    .then(result=>result.data)
+    .catch(err=>err);
+    
+    const signature = await web3.request({method:"personal_sign", params:[dataToSign, account[0]]})
+    .then(result=>result)
+    .catch(console.log)
 
-    // TODO
+    if (!signature) return;
+
+    const loginResult = await axios
+    .post("http://localhost:4000/user/login", {
+      dataToSign, signature, address: account[0]
+    })
+    .then(result=>{
+      return result.data;
+    })
+    .catch(console.log)
+
+    if (!loginResult) return;
+
+    setIsLogin(true);
+    setAccessToken(loginResult.data.accessToken);
   };
+  
+  const logoutHandler = async ()=>{
+    const result = await axios.post("http://localhost:4000/user/logout",{})
+    .then(result=>{
+      return result.data;
+    })
+    .catch(console.log)
+
+    setIsLogin(false);
+    setAccessToken("");
+  }
 
   return (
     <BrowserRouter>
-      <Header loginHandler={loginHandler} isLogin={isLogin}/>
+      {
+        isLogin ? <Header userHandler={logoutHandler} isLogin={isLogin}/>
+        : <Header userHandler={loginHandler} isLogin={isLogin} />
+      }
+      
       <div className="mt-24 w-full flex flex-col h-screen flex-grow">
         <Routes>
           <Route path="/" element={<MainPage />} />
@@ -52,6 +88,7 @@ function App() {
           {/* </Route> */}
         </Routes>
       </div>
+      <Footer/>
     </BrowserRouter>
   );
 }
