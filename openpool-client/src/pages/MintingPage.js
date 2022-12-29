@@ -27,38 +27,38 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
   const [fileDataURL, setFileDataURL] = useState(null);
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
-    const [image_url, setImageUrl] = useState(""); // 서버에서 받아오는 이미지
+  const [image_url, setImageUrl] = useState(""); // 서버에서 받아오는 이미지
 
 
 
-    const changeHandler = (e) => {
-      const file = e.target.files[0];
-      if (!file.type.match(imageMimeType)) {
-        alert("Image mime type is not valid");
-        return;
-      }
-      setFile(file);
+  const changeHandler = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.match(imageMimeType)) {
+      alert("Image mime type is not valid");
+      return;
     }
-    useEffect(() => {
-      let fileReader, isCancel = false;
-      if (file) {
-        fileReader = new FileReader();
-        fileReader.onload = (e) => {
-          const { result } = e.target;
-          if (result && !isCancel) {
-            setFileDataURL(result)
-          }
-        }
-        fileReader.readAsDataURL(file);
-      }
-      return () => {
-        isCancel = true;
-        if (fileReader && fileReader.readyState === 1) {
-          fileReader.abort();
+    setFile(file);
+  }
+  useEffect(() => {
+    let fileReader, isCancel = false;
+    if (file) {
+      fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const { result } = e.target;
+        if (result && !isCancel) {
+          setFileDataURL(result)
         }
       }
-  
-    }, [file]);
+      fileReader.readAsDataURL(file);
+    }
+    return () => {
+      isCancel = true;
+      if (fileReader && fileReader.readyState === 1) {
+        fileReader.abort();
+      }
+    }
+
+  }, [file]);
     
 
 
@@ -113,16 +113,16 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
 
     
     return createContractTxHash;
-};
+  };
 
 // 이미지를 업로드 할 때 필요한 함수입니다.
-const imageUpload= async(e) =>{
+  const imageUpload= async(e) =>{
 
-};
+  };
 
 
 // 메타데이터를 업로드 할 때 필요한 함수입니다.
-const createMetadata = async ()=>{
+  const createMetadata = async ()=>{
     const result = axios.post("http://localhost:4000/nft/metadata",{
         name: nftName,
         external_url: "http://openpool.com/",
@@ -134,26 +134,25 @@ const createMetadata = async ()=>{
     .catch(console.log);
 
     return result.url;
-}
-
-const mintingNFT = async ()=>{ 
-  try{
-  const token_uri = await createMetadata(); 
- 
-  await contracts.mintNFT(token_uri);
-  } catch (err) {
-    console.log(err);
   }
-}  
+
+  const mintingNFT = async ()=>{ 
+    try{
+    const token_uri = await createMetadata(); 
+
+    await contracts.mintNFT(token_uri);
+    } catch (err) {
+      console.log(err);
+    }  
 
     return result.url;
-}
+  }
 
   // NFT 민팅을 스마트 컨트랙트에서 실행한다. 의 로직을 작성
   // 결과값을 표현하거나 redirect 하거나 즉, 만들어졌을때 어떻게 표현할건지?
   // 로딩페이지... isLoading 
 
-}
+
 
 
     return(
