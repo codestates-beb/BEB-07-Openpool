@@ -25,16 +25,23 @@ function App() {
   const [accessToken, setAccessToken] = useState("");
   const metamask = useMetamask();
 
-  const loginHandler = async () => {
-    // 현재 클라이언트 웹페이지에 계정을 연동하는 것 까지는 구현되었으나
-    // 서버에서 신원인증 토큰을 발급받는 부분은 구현이 안 되어 있습니다.
 
+  const getAccount = async ()=>{
     const account = await metamask
       .request({
         method: "eth_requestAccounts",
       })
       .then((result) => result)
       .catch((err) => err);
+
+      return account;
+  }
+
+  const loginHandler = async () => {
+    // 현재 클라이언트 웹페이지에 계정을 연동하는 것 까지는 구현되었으나
+    // 서버에서 신원인증 토큰을 발급받는 부분은 구현이 안 되어 있습니다.
+
+    const account = await getAccount();
 
     const dataToSign = await axios.get("http://localhost:4000/user/datatosign")
     .then(result=>result.data)
@@ -87,9 +94,19 @@ function App() {
       if (result === 400) return;
 
       setIsLogin(true);
+      setUserAccount(result.data.data.address);
       setAccessToken(result.data.accessToken);
     })()
   },[])
+
+  useEffect(()=>{
+    if(isLogin === true){
+      (async()=>{
+        const account = await getAccount();
+        setUserAccount(account);
+      })()
+    }
+  }, [setIsLogin])
 
   return (
     <BrowserRouter>
@@ -102,7 +119,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage userAccount={userAccount}/>} />
-          <Route path="/detail/:contract/:tokenId" element={<DetailPage />} />
+          <Route path="/detail/:contract/:tokenId" element={<DetailPage userAccount={userAccount}/>} />
           <Route path="/minting" element={<MintingPage userAccount={userAccount} />} />
           {/* <Route path=":id"/> */}
           {/* </Route> */}

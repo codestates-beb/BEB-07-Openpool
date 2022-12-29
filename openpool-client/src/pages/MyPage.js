@@ -1,5 +1,6 @@
 //modules
 import {useState, useEffect } from "react";
+import axios from "axios";
 
 //contracts
 import openNFTBytesCode from "../contracts/openNFTBytescode.json";
@@ -10,14 +11,17 @@ import useMetamask from "../hooks/useMetamask";
 const MyPage = ({userAccount})=>{
     const metamask = useMetamask();
     const [CaddressCreated, setAddress] = useState("");
+    const [addressToRegister, setAddressToRegister] = useState("");
 
-    const registerContractHandler = ()=>{
-        
+    const registerContractHandler = async ()=>{
+        const result = await axios.post("http://localhost:4000/contract/register",{
+            address : addressToRegister
+        });
     }
 
     // 컨트랙트 생성에 필요한 함수입니다.
     // 컨트랙트를 생성하는 트랜잭션 주소를 반환합니다.
-    const createContract = async ()=>{
+    const createContractHandler = async ()=>{
         const account = await metamask.request({method:"eth_requestAccounts"})
         const curAccount = account[0];
         if(!curAccount) return;
@@ -35,8 +39,6 @@ const MyPage = ({userAccount})=>{
                 data: "0x"+openNFTBytesCode.object
             }]
         })
-
-        
 
         setTimeout(async()=>{
             const contractAddress = await metamask.request({
@@ -74,10 +76,19 @@ const MyPage = ({userAccount})=>{
                     <div className="lg:w-[400px] w-[200px] border p-6 rounded-lg">
                         <h2 className="">스마트 컨트랙트 등록</h2>
                         <div>
-                            <input className="w-full py-4 px-2" placeholder="보유하신 스마트 컨트랙트 주소를 입력해주세요."/>
+                            <input 
+                                className="w-full py-4 px-2" 
+                                placeholder="보유하신 스마트 컨트랙트 주소를 입력해주세요."
+                                onChange={(e)=>{setAddressToRegister(e.target.value)}}
+                                value={addressToRegister}
+                            />
                         </div>
                         <div className="button-group flex justify-center mt-6">
-                            <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">컨트랙트 등록</button>
+                            <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                onClick={registerContractHandler}
+                            >
+                                컨트랙트 등록
+                            </button>
                         </div>
                     </div>
                     <div className="lg:w-[400px] w-[200px] border p-6 rounded-lg">
@@ -85,7 +96,7 @@ const MyPage = ({userAccount})=>{
                         <p>{CaddressCreated}</p>
                         <div className="button-group flex justify-center mt-6">
                             <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                onClick={createContract}
+                                onClick={createContractHandler}
                             >
                                 컨트랙트 생성
                             </button>

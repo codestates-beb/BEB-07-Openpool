@@ -11,7 +11,7 @@ import "../assets/css/minting.css";
 import useMetamask from "../hooks/useMetamask"
 
 // 이름 링크 설명 블록체인 
-function Minting( {isLogin}) { // isLogin을 어디서든 사용가능,,,
+function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가능,,,
   // location
   const navigation = useNavigate();
 

@@ -225,9 +225,20 @@ const registerContract = async (req : Request, res : Response)=>{
     if(checkAddressData === "0x") return res.status(400).send("컨트랙트 주소가 아닙니다.");
 
     const name = await getName(address)
+    const owner = await getOwner(address);
 
-    console.log(name)
-
+    await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(Contract)
+    .values({
+        address,
+        asset_contract_type : 1,
+        name : name || "",
+        description : "",
+        schema_name : "ERC721",
+        external_link : "http://openpool.abc",
+        owner : owner,
+    }).execute();
 
     return res.status(200).send("컨트랙트가 등록이 완료되었습니다.")
 }

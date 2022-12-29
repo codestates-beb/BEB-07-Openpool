@@ -8,6 +8,9 @@ import User from "../entity/User";
 const jwt = require('jsonwebtoken');
 
 async function signup (address : string){
+  const result = await isUser(address);
+  if(!result) return;
+  
   const createdAt = new Date().toISOString();
   return await AppDataSource.createQueryBuilder()
   .insert()
@@ -22,11 +25,10 @@ async function signup (address : string){
 }
 
 async function isUser(address : string){
-  const result = await AppDataSource.createQueryBuilder()
-  .select()
-  .from(User, "User")
-  .where("User.address = :address", {address})
-  .getOne();
+  const result = await AppDataSource.getRepository(User)
+  .createQueryBuilder("user")
+  .where("user.address = :address", {address})
+  .getOneOrFail();
 
   console.log(result);
 
