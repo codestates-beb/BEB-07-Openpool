@@ -5,12 +5,12 @@ export default class User {
     @PrimaryGeneratedColumn()
     id: number
     
-    @Column()
+    @Column({unique:true})
     address: string
 
     @Column()
-    nickname: string
+    name: string
 
     @Column()
-    created_At: Date
+    createdAt: Date
 }

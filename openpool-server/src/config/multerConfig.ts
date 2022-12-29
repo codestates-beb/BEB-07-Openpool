@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import multer, {FileFilterCallback} from "multer";
 import crypto from "crypto";
-import path from "path";
 
 export default {
     storage: multer.diskStorage({
