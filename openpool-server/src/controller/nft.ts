@@ -46,6 +46,7 @@ const uploadImage = (req : Request, res : Response)=>{
 
     const file : Express.Multer.File = req.file;
     const imageName = encodeURIComponent(file.filename);
+
     const param = {
         'Bucket' : BUCKET_NAME,
         'Key': imageName,
@@ -66,9 +67,9 @@ const uploadImage = (req : Request, res : Response)=>{
         'Key': imageName
     };
     storage.getSignedUrl('putObject', urlParam, function(err, url) {
-        const pos1 = url.indexOf('.png');
-        const image_url = url.substring(0,pos1+4);
-        return res.status(202).send({image_url});
+        // const pos1 = url.indexOf('.png');
+        // const image_url = url.substring(0,pos1+4);
+        return res.status(202).send({url});
     });
 }
 

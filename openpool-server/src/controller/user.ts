@@ -34,7 +34,7 @@ async function isUser(address : string){
   else return true;
 }
 
-export const requestAddrInfo = async (req : Request, res: Response)=>{
+const requestAddrInfo = async (req : Request, res: Response)=>{
   const address : string = req.body.address;
 
   const curBlockNumber : number = await web3.eth.getBlockNumber();
@@ -56,7 +56,7 @@ export const requestAddrInfo = async (req : Request, res: Response)=>{
   })
 }
 
-export const requestBalanceOf = async (req : Request, res : Response)=>{
+const requestBalanceOf = async (req : Request, res : Response)=>{
   const address : string = req.body.address;
 
   console.log(address);
