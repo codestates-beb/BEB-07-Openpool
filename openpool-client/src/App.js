@@ -26,8 +26,6 @@ function App() {
   const navigation = useNavigate();
   const metamask = useMetamask();
 
-
-
   const getAccount = async ()=>{
     const account = await metamask
       .request({
@@ -101,15 +99,6 @@ function App() {
       setAccessToken(result.data.accessToken);
     })()
   },[])
-
-  useEffect(()=>{
-    if(isLogin === true){
-      (async()=>{
-        const account = await getAccount();
-        setUserAccount(account);
-      })()
-    }
-  }, [setIsLogin])
 
   return (
     <>

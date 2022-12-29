@@ -15,6 +15,9 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
   // location
   const navigation = useNavigate();
 
+  const [userContracts, setUserContracts] = useState([]);
+
+  // 메타에디어 변수
   const [nftName, setNftName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -59,9 +62,10 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
 
   useEffect(()=>{
     (async()=>{
-      if (isLogin === false) navigation("/");
-    })();
-  }, [isLogin])
+      axios.get("http://localhost:4000/contract/"+userAccount)
+      .then(result => setUserContracts(result.data))
+    })()
+  }, [])
 
   //Web3 관련
   const metamask = useMetamask();
@@ -187,8 +191,11 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
                       defaultValue={0}
                     >
                       <option value={0} disabled={true}>민팅할 컨트랙트를 고르세요.</option>
-                      <option value="0x7e5536f75d9567fbe7f13c3f6ea4c8a608f8e54b">0x7e5536f75d9567fbe7f13c3f6ea4c8a608f8e54b</option>
-                      <option value="0x4e5e76fed68e5a0456059ac46a0bae5623c522fc">0x4e5e76fed68e5a0456059ac46a0bae5623c522fc</option>
+                      {userContracts.map((contract, index)=>{
+                        return(
+                          <option key={index} value={contract.address}>{contract.address}</option>
+                        )
+                      })}
                     </select>
                   </div>
 

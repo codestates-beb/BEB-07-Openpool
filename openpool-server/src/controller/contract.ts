@@ -216,6 +216,15 @@ async function getTotalSupply(address : string) {
     return web3.utils.toNumber(result);
 }
 
+const getContractsByOwner = async(req : Request, res: Response)=>{
+    const address = req.params.address;
+    
+    const result = await AppDataSource.getRepository(Contract)
+    .findBy({owner:address});
+
+    return res.status(200).send(result);
+}
+
 const registerContract = async (req : Request, res : Response)=>{
     if(!req.body.address) return res.status(400).send("잘못된 입력입니다.")
     
@@ -269,6 +278,7 @@ const test = async (req: Request, res: Response)=>{
 }
 
 export default {
+    getContractsByOwner,
     registerContract,
     giveTokenURI,
     test,
