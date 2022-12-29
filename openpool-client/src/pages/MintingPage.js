@@ -27,22 +27,19 @@ function Minting({isLogin}) { // isLogin을 어디서든 사용가능,,,
   const [fileDataURL, setFileDataURL] = useState(null);
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
-  const changeHandler = (e) => {
-    const file = e.target.files[0];
-    if (!file.type.match(imageMimeType)) {
-      alert("Image mime type is not valid");
-      return;
-    }
-    setFile(file);
-  }
-  useEffect(() => {
-    let fileReader, isCancel = false;
-    if (file) {
-      fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        const { result } = e.target;
-        if (result && !isCancel) {
-          setFileDataURL(result)
+    const [image_url, setImageUrl] = useState(""); // 서버에서 받아오는 이미지
+
+    // imgPreView
+    const [imgBase64, setImgBase64] = useState(''); 
+    const [imgFile, setImgFile] = useState(null);
+
+    const handleChangeFile = (e) => {
+      let reader = new FileReader();
+
+      reader.onload = () =>{
+        const base64 = reader.result;
+        if(base64) {
+          setImgBase64(base64.toString());
         }
       }
       fileReader.readAsDataURL(file);
@@ -54,7 +51,7 @@ function Minting({isLogin}) { // isLogin을 어디서든 사용가능,,,
       }
     }
 
-  }, [file]);
+
 
   //Web3 관련
   const metamask = useMetamask();
