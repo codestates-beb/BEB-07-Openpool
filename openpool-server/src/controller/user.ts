@@ -1,18 +1,79 @@
 import {Request, Response} from "express";
 import crypto from "crypto";
 import web3 from "../config/web3";
+
+import AppDataSource from "../db/data-source";
 import User from "../entity/User";
 
 const jwt = require('jsonwebtoken');
+
+async function signup (address : string){
+  const createdAt = new Date().toISOString();
+  return await AppDataSource.createQueryBuilder()
+  .insert()
+  .into(User)
+  .values({
+    address,
+    name: "unname",
+    createdAt,
+  }).execute()
+  .then(result=>result)
+  .catch(console.log);
+}
+
+async function isUser(address : string){
+  const result = await AppDataSource.createQueryBuilder()
+  .select()
+  .from(User, "User")
+  .where("User.address = :address", {address})
+  .getOne();
+
+  console.log(result);
+
+  if (!result) return false;
+  else return true;
+}
+
+const requestAddrInfo = async (req : Request, res: Response)=>{
+  const address : string = req.body.address;
+
+  const curBlockNumber : number = await web3.eth.getBlockNumber();
+  const fromBlock : number = curBlockNumber - 1000;
+  const toBlock : number = curBlockNumber;
+
+  console.log(address);
+
+  return await web3.eth.getPastLogs({
+      fromBlock: 8098260,
+      toBlock: 8098260,
+      address
+  }, (error : Error, logs)=>{
+      if (error) console.log(error)
+      else {
+          console.log(logs)
+          res.status(200).send(logs);
+      };
+  })
+}
+
+const requestBalanceOf = async (req : Request, res : Response)=>{
+  const address : string = req.body.address;
+
+  console.log(address);
+  return await web3.eth.getBalance(address)
+  .then(result=>{
+      console.log(result);
+      res.status(200).send(result);
+  })
+  .catch(err =>{
+      console.log(err);
+  });
+}
 
 const createDataToSign = (req : Request, res : Response)=>{
     const dataToSign = crypto.randomBytes(16).toString("base64url");
     if (dataToSign.length < 1 || !dataToSign) return res.status(404).send("더미데이터를 생성하지 못 했습니다.");
     else return res.status(200).send(dataToSign);
-}
-
-const signup = (req : Request, res : Response)=>{
-
 }
 
 const login = async (req : Request, res : Response)=> {
@@ -22,10 +83,12 @@ const login = async (req : Request, res : Response)=> {
     if (addressVerified !== address){
         return res.status(404).send("login failed");
     } else {
-       let accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
-       let refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});
-       res.cookie('refreshToken',refreshToken, {httpOnly:true,});
-       return res.json({data:{accessToken}, message:"ok"});
+      if (! await isUser(address)) await signup(address);
+
+      let accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
+      let refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});
+      res.cookie('refreshToken',refreshToken, {httpOnly:true,});
+      return res.json({data:{accessToken}, message:"ok"});
     }
 }
 
@@ -57,6 +120,8 @@ const verify = (req : Request, res : Response)=>{
 };
 
 export default {
+    requestBalanceOf,
+    requestAddrInfo,
     createDataToSign,
     signup,
     login,
