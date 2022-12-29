@@ -6,23 +6,20 @@ export default class NFT{
     id: number
 
     @Column()
-    nft_contract_addr: string
+    tokenId: number
 
     @Column()
-    nft_id: number
+    name: string
 
     @Column()
-    nft_name: string
+    token_url: string
 
     @Column()
-    nft_descrition: string
+    image_url: string
 
     @Column()
-    nft_tokenURI: string
-
-    @Column()
-    nft_external_url: string
+    contract: string
     
     @Column()
-    lastprice: number
+    owner: string
 }
