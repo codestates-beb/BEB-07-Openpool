@@ -87,20 +87,17 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
 
   // 메타데이터를 업로드 할 때 필요한 함수입니다.
   const createMetadata = async ()=>{
-    console.log(nftName);
-    console.log(description);
-    console.log(contractAddress);
-    // const result = axios.post("http://localhost:4000/nft/metadata",{
-    //     name: nftName,
-    //     external_url: "http://openpool.com/",
-    //     description: description,
-    //     image: image_url,
-    //     attributes: []
-    // })
-    // .then(result=>result.data)
-    // .catch(console.log);
+    const result = axios.post("http://localhost:4000/nft/metadata",{
+        name: nftName,
+        external_url: "http://openpool.com/",
+        description: description,
+        image: image_url,
+        attributes: []
+    })
+    .then(result=>result.data)
+    .catch(console.log);
 
-    // return result.url;
+    return result.url;
   }
 
   const mintingNFT = async ()=>{ 
@@ -126,9 +123,7 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
               <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-3 gap-6">
                   <div className="col-span-3 sm:col-span-2">
-                    <label 
-                    onChange={(e)=> setNftName(e.target.value)} value = {nftName}
-                    htmlFor="company-website" className="text-xl block font-medium text-gray-700">
+                    <label htmlFor="company-website" className="text-xl block font-medium text-gray-700">
                       Name
                     </label>
                     <div className="mt-1 flex rounded-md shadow-sm">
@@ -137,16 +132,17 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
                         type="text"
                         name="company-website"
                         id="company-website"
-                        className="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block p-3 w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="NFT name"
+                        onChange={(e)=> setNftName(e.target.value)} 
+                        value = {nftName}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label onChange={(e)=> setDescription(e.target.value)} value = {description}  
-                  htmlFor="about" className="block text-xl font-medium text-gray-700">
+                  <label htmlFor="about" className="block text-xl font-medium text-gray-700">
                     Description
                   </label>
                   <div className="mt-1">
@@ -154,9 +150,10 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
                       id="about"
                       name="about"
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       placeholder="The description of NFT"
-                      defaultValue={''}
+                      onChange={(e)=> setDescription(e.target.value)} 
+                      value = {description}  
                     />
                   </div>
                   <p className="mt-2 text-sm text-gray-500">
@@ -165,7 +162,7 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
                 </div>
                 
                 <div className="col-span-6 sm:col-span-3">
-                    <label onClick={(e)=> setContractAddress(e.target.value)} value = {contractAddress}
+                    <label
                     htmlFor="collection" className="block text-xl font-medium text-gray-700">
                       Contract Transaction
                     </label>
@@ -174,16 +171,17 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
                       name="collection"
                       autoComplete="collection-name"
                       className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      
+                      onChange={(e)=> setContractAddress(e.target.value)} 
+                      defaultValue={0}
                     >
-                      <option>0x4e5e76fed68e5a0456059ac46a0bae5623c522fc</option>
-
+                      <option value={0} disabled={true}>민팅할 컨트랙트를 고르세요.</option>
+                      <option value="0x7e5536f75d9567fbe7f13c3f6ea4c8a608f8e54b">0x7e5536f75d9567fbe7f13c3f6ea4c8a608f8e54b</option>
+                      <option value="0x4e5e76fed68e5a0456059ac46a0bae5623c522fc">0x4e5e76fed68e5a0456059ac46a0bae5623c522fc</option>
                     </select>
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
-                    <label onChange={(e)=> setPrice(e.target.value)} value = {price} 
-                    htmlFor="company-website" className="text-xl block font-medium text-gray-700">
+                    <label htmlFor="company-website" className="text-xl block font-medium text-gray-700">
                       Price
                       <div className="mt-1 flex rounded-md shadow-sm">
                         <input
@@ -192,6 +190,8 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
                           id="company-website"
                           className="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder="1 eth"
+                          onChange={(e)=> setPrice(e.target.value)} 
+                          value = {price}
                           />
                       </div>
                     </label>
@@ -225,8 +225,8 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
               <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
               <div>
               </div>
-                <button
-                  onClick={mintingNFT}
+                <button type="button"
+                  onClick={createMetadata}
                   className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Make own your NFT

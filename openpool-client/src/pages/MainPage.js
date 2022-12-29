@@ -14,7 +14,7 @@ import whatIsNft from "../assets/images/what-is-nft.png";
 
 const MainPage = () => {
   return (
-    <>
+    <div className="p-10">
       <div className="pt-10 flex justify-center">
         <p className="text-5xl font-extrabold">
           Explore, collect, and sell NFTs
@@ -281,7 +281,7 @@ const MainPage = () => {
           </Swiper>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
