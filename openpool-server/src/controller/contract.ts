@@ -15,6 +15,7 @@ const contract = new web3.eth.Contract(CreatureABI);
 //NFT method Selector
 const getNameSelector = web3.eth.abi.encodeFunctionSignature("name()");
 const getTokenURISelector = web3.eth.abi.encodeFunctionSignature("tokenURI(uint256)");
+const getOwnerSelector = web3.eth.abi.encodeFunctionSignature("owner()");
 
 
 async function getTokenURI(address : string, tokenId : number){
@@ -35,7 +36,6 @@ async function getTokenURI(address : string, tokenId : number){
 
 async function getName(address : string){
     const dataEncoded = getNameSelector;
-    console.log(dataEncoded);
 
     const result = await web3.eth.call({
         to: address,
@@ -49,6 +49,10 @@ async function getName(address : string){
     return web3.utils.toUtf8(result);
 }
 
+async function getOwner(address : string){
+
+}
+
 const registerContract = async (req : Request, res : Response)=>{
     if(!req.body.address) return res.status(400).send("잘못된 입력입니다.")
     
@@ -60,6 +64,8 @@ const registerContract = async (req : Request, res : Response)=>{
     const name = await getName(address)
 
     console.log(name)
+
+
     return res.status(200).send("컨트랙트가 등록이 완료되었습니다.")
 }
 
