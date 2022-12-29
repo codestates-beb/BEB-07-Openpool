@@ -29,8 +29,6 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
 
   const [image_url, setImageUrl] = useState(""); // 서버에서 받아오는 이미지
 
-
-
   const changeHandler = (e) => {
     const file = e.target.files[0];
     if (!file.type.match(imageMimeType)) {
@@ -86,9 +84,7 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
   //   });
   //   console.log(accounts[0]);
   // }
-
-
-
+  
   // 컨트랙트 생성에 필요한 함수입니다.
   // 컨트랙트를 생성하는 트랜잭션 주소를 반환합니다.
 
@@ -110,16 +106,23 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
             data: "0x"+openNFTBytesCode.object
         }]
     })
-
     
     return createContractTxHash;
   };
 
 // 이미지를 업로드 할 때 필요한 함수입니다.
-  const imageUpload= async(e) =>{
-
-  };
-
+const imageUpload= async() =>{
+    const result = await axios.post("http://localhost:4000/nft/image",{image: imgFile},{
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    }).then(res=>res.data)
+    .catch(console.log);
+  
+    if (!result) return;
+    console.log(result.image_url);
+    setImgSrc(result.image_url);
+}
 
 // 메타데이터를 업로드 할 때 필요한 함수입니다.
   const createMetadata = async ()=>{
@@ -152,8 +155,9 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
   // 결과값을 표현하거나 redirect 하거나 즉, 만들어졌을때 어떻게 표현할건지?
   // 로딩페이지... isLoading 
 
-
-
+useEffect(()=>{
+  console.log(imgFile);
+}, [imgFile]);
 
     return(
       <>
@@ -169,7 +173,7 @@ function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
               </p>
             </div>
           </div>
-          <div className=" col-start-2 col-span-1">
+          <div className="col-start-2 col-span-1">
             <form> 
             {/* 포스트 요청 주소 및 포스트맨 확인 */}
               <div className="shadow sm:overflow-hidden sm:rounded-md">

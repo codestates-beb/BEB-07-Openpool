@@ -2,11 +2,14 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {useParams} from "react-router";
 import axios from 'axios';
-import whatIsNft from "../assets/images/what-is-nft.png";
-import { ethers } from 'ethers';
 
-import openNFTABI from "../contracts/openNFTABI.json"
-import openNFTBytesCode from "../contracts/openNFTBytescode.json";
+//images
+
+//css
+import "../assets/css/detail.css";
+
+//hooks
+import useMetamask from '../hooks/useMetamask';
 
 const DetailPage = () => {
   const {contract, tokenId} = useParams();
@@ -16,25 +19,7 @@ const DetailPage = () => {
   const [owner, setOwner] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [imgSrc, setImgSrc] = useState('')
-
-
-  const mintingNFT = async ()=>{
-  
-    const myContractWithSigner = await provider.send("eth_requestAccounts", [])
-      .then( _=>provider.getSigner())
-      .then(signer=>myContract.connect(signer));
-  
-    myContractWithSigner.functions.mintNFT(ethereum.selectedAddress, setImgSrc(imgSrc));
-    myContract.name().then(console.log);
-  }
-  
-  const ethereum = window.ethereum;
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const myContract = new ethers.Contract(openNFTBytesCode, openNFTABI, provider);
-  
-  
-
+  const [img, setImg] = useState('')
   
   const requestDetailOfNFT = async()=>{
     const tokenURI = await axios.get("http://localhost:4000/contract/tokenuri/" +`${contract}/${tokenId}`)
@@ -62,7 +47,7 @@ const DetailPage = () => {
   useEffect(()=>{
     requestDetailOfNFT();
   })
-
+  
   return (
     
 <section className="text-gray-600 body-font">
@@ -73,8 +58,7 @@ const DetailPage = () => {
     </h2>
     <div className="lg:w-4/6 mx-auto">
       <div className="rounded-lg h-64 overflow-hidden">
-        <img onChange={(e) => setImgSrc(e.target.value)} value= {imgSrc}
-        className="object-cover object-center h-full w-full" src={whatIsNft} alt="" />
+        <img className="object-cover object-center h-full w-full" src={img} alt="" />
       </div>
       <div className="flex flex-col sm:flex-row mt-10">
         <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
