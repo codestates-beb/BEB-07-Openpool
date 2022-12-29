@@ -98,12 +98,12 @@ function App() {
         : <Header userHandler={loginHandler} isLogin={isLogin} />
       }
       
-      <div className="mt-10 mb-10 w-full flex flex-col flex-grow">
+      <div className="mb-10 w-full flex flex-col flex-grow">
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage" element={<MyPage userAccount={userAccount}/>} />
           <Route path="/detail/:contract/:tokenId" element={<DetailPage />} />
-          <Route path="/minting" element={<MintingPage />} />
+          <Route path="/minting" element={<MintingPage userAccount={userAccount} />} />
           {/* <Route path=":id"/> */}
           {/* </Route> */}
         </Routes>

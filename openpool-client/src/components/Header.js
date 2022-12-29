@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 // Heroicons
 import WalletIconOutline from "@heroicons/react/24/outline/WalletIcon";
 import WalletIconSolid from "@heroicons/react/24/solid/WalletIcon";
-import ShopingCartIcon from "@heroicons/react/24/outline/ShoppingCartIcon"
+import PhotoIcon from "@heroicons/react/24/solid/PhotoIcon";
 import UserCircleIconOutline from "@heroicons/react/24/outline/UserCircleIcon";
 import UserCircleIconSolid from "@heroicons/react/24/solid/UserCircleIcon";
 
@@ -32,7 +32,7 @@ const Header = ({userHandler, isLogin})=>{
             </div>
             <nav>
                 <ul className="link-group flex items-center pr-3">
-                <li className="link-item px-3">
+                    <li className="link-item px-3">
                         <Link>
                             {isLogin ? 
                                 <WalletIconSolid className="h-10 w-10" onClick={userHandler}/>
@@ -40,16 +40,21 @@ const Header = ({userHandler, isLogin})=>{
                             }
                         </Link>
                     </li>
-                    <li className="link-item px-3">
-                        <Link to="/Mypage">
-                            <UserCircleIconOutline className="h-10 w-10" />
-                        </Link>
-                    </li>
-                    <li className="link-item px-3">
-                        <Link to="/minting">
-                            <p>Create</p>
-                        </Link>
-                    </li>
+                    {isLogin ?
+                        <>
+                            <li className="link-item px-3">
+                                <Link to="/Mypage">
+                                    <UserCircleIconSolid className="h-10 w-10" />
+                                </Link>
+                            </li>
+                            <li className="link-item px-3">
+                                <Link to="/minting">
+                                    <PhotoIcon className="h-10 w-10"></PhotoIcon>
+                                </Link>
+                            </li>
+                        </>
+                         : <></>
+                    }
                 </ul>
             </nav>
         </header>
