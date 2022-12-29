@@ -18,6 +18,15 @@ const useMetamask = ()=>{
                 alert("메타마스크만 지원합니다.");
                 return;
             }
+            
+            const chaindId = await window.ethereum.request({method:"eth_chainId"});
+            if(chaindId !== "0x5"){
+                const isChange = await window.ethereum
+                .request({method:"wallet_switchEthereumChain", params:[{chaindId:"0x5"}]})
+                .catch(err=>err);
+
+                if(!isChange) return;
+            };
 
             setMetamask(window.ethereum);
         })()

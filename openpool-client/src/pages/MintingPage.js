@@ -95,8 +95,15 @@ function Minting() {
             data: "0x"+openNFTBytesCode.object
         }]
     })
+
+    const contractAddress = await metamask.request({
+        method:"eth_getTransactionReceipt",
+        params:[{
+          hash: createContractTxHash
+        }]
+    }).then(res=>res.contractAddress);
     
-    return createContractTxHash;
+    return contractAddress;
 };
 
 // 이미지를 업로드 할 때 필요한 함수입니다.

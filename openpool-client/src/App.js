@@ -93,7 +93,7 @@ function App() {
         : <Header userHandler={loginHandler} isLogin={isLogin} />
       }
       
-      <div className="mt-24 w-full flex flex-col h-screen flex-grow">
+      <div className="mt-24 w-full flex flex-col flex-grow">
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
