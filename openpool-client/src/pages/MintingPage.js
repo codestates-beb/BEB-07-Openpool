@@ -69,7 +69,6 @@ function Minting() {
 
   }
 
-
   const resetForm = () =>{
     setNftName('')
     setDescription('')
@@ -96,14 +95,22 @@ function Minting() {
             data: "0x"+openNFTBytesCode.object
         }]
     })
-
     
     return createContractTxHash;
 };
 
 // 이미지를 업로드 할 때 필요한 함수입니다.
 const imageUpload= async() =>{
-    
+    const result = await axios.post("http://localhost:4000/nft/image",{image: imgFile},{
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    }).then(res=>res.data)
+    .catch(console.log);
+  
+    if (!result) return;
+    console.log(result.image_url);
+    setImgSrc(result.image_url);
 }
 
 // 메타데이터를 업로드 할 때 필요한 함수입니다.
@@ -121,9 +128,13 @@ const createMetadata = async ()=>{
     return result.url;
 }
 
-const mintingNFT = ()=>{
+const mintingNFT = async ()=>{
 
 }
+
+useEffect(()=>{
+  console.log(imgFile);
+}, [imgFile]);
 
     return(
       <>
@@ -140,7 +151,7 @@ const mintingNFT = ()=>{
             </div>
           </div>
           <div className="col-start-2 col-span-1">
-            <form action="#" method="POST"> 
+            <form> 
             {/* 포스트 요청 주소 및 포스트맨 확인 */}
               <div className="shadow sm:overflow-hidden sm:rounded-md">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
@@ -252,9 +263,8 @@ const mintingNFT = ()=>{
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                  <button
-                    onClick={handleSubmit} // 서버쪽으로 넘어가야함
-                    type="submit"
+                  <button type="button"
+                    onClick={imageUpload} // 서버쪽으로 넘어가야함
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Make own your NFT
