@@ -22,8 +22,8 @@ const login = async (req : Request, res : Response)=> {
     if (addressVerified !== address){
         return res.status(404).send("login failed");
     } else {
-       let accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
-       let refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});
+       const accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
+       const refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});
        res.cookie('refreshToken',refreshToken, {httpOnly:true,});
        return res.json({data:{accessToken}, message:"ok"});
     }
