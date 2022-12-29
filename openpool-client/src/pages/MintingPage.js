@@ -33,23 +33,35 @@ function Minting({isLogin}) { // isLogin을 어디서든 사용가능,,,
     const [imgBase64, setImgBase64] = useState(''); 
     const [imgFile, setImgFile] = useState(null);
 
-    const handleChangeFile = (e) => {
-      let reader = new FileReader();
-
-      reader.onload = () =>{
-        const base64 = reader.result;
-        if(base64) {
-          setImgBase64(base64.toString());
+    const changeHandler = (e) => {
+      const file = e.target.files[0];
+      if (!file.type.match(imageMimeType)) {
+        alert("Image mime type is not valid");
+        return;
+      }
+      setFile(file);
+    }
+    useEffect(() => {
+      let fileReader, isCancel = false;
+      if (file) {
+        fileReader = new FileReader();
+        fileReader.onload = (e) => {
+          const { result } = e.target;
+          if (result && !isCancel) {
+            setFileDataURL(result)
+          }
+        }
+        fileReader.readAsDataURL(file);
+      }
+      return () => {
+        isCancel = true;
+        if (fileReader && fileReader.readyState === 1) {
+          fileReader.abort();
         }
       }
-      fileReader.readAsDataURL(file);
-    }
-    return () => {
-      isCancel = true;
-      if (fileReader && fileReader.readyState === 1) {
-        fileReader.abort();
-      }
-    }
+  
+    }, [file]);
+    
 
 
 
