@@ -5,5 +5,6 @@ import web3 from "../config/web3";
 
 import NFTController from "./nft";
 import userController from "./user";
+import contractController from "./contract";
 
-export {NFTController, userController}
+export {NFTController, userController, contractController}

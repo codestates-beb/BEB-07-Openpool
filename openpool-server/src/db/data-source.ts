@@ -19,7 +19,7 @@ const AppDataSource = new DataSource({
 AppDataSource.initialize()
     .then(()=>{
         console.log("db init success");
-        AppDataSource.synchronize();
+        // AppDataSource.synchronize();
     })
     .catch((error)=> console.log(error));
 
