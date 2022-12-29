@@ -1,5 +1,5 @@
 // modules
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import axios from "axios";
 
@@ -20,7 +20,8 @@ import MintingPage from "./pages/MintingPage";
 import useMetamask from "./hooks/useMetamask";
 
 function App() {
-  const isLogin = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
   const web3 = useMetamask();
 
   const loginHandler = async () => {
@@ -34,14 +35,64 @@ function App() {
       .then((result) => result)
       .catch((err) => err);
 
-    console.log(account);
+    const dataToSign = await axios.get("http://localhost:4000/user/datatosign")
+    .then(result=>result.data)
+    .catch(err=>err);
+    
+    const signature = await web3.request({method:"personal_sign", params:[dataToSign, account[0]]})
+    .then(result=>result)
+    .catch(console.log)
 
-  
+    if (!signature) return;
+
+    const loginResult = await axios
+    .post("http://localhost:4000/user/login", {
+      dataToSign, signature, address: account[0]
+    }, {withCredentials: true})
+    .then(result=>{
+      return result.data;
+    })
+    .catch(console.log)
+
+    if (!loginResult) return;
+
+    setIsLogin(true);
+    setAccessToken(loginResult.data.accessToken);
   };
+  
+  const logoutHandler = async ()=>{
+    const result = await axios.post("http://localhost:4000/user/logout",{}, {withCredentials:true})
+    .then(result=>{
+      return result.data;
+    })
+    .catch(console.log)
+
+    if (!result) return;
+
+    setIsLogin(false);
+    setAccessToken("");
+  }
+
+  useEffect(()=>{
+    (async()=>{
+      const result = await axios.post("http://localhost:4000/user/verify",{},{withCredentials:true})
+      .then(result=>{return result.data})
+      .catch(console.log);
+
+      if (!result) return;
+
+      setIsLogin(true);
+      setAccessToken(result.data.accessToken);
+    })()
+  },[])
 
   return (
     <BrowserRouter>
-      <Header loginHandler={loginHandler} isLogin={isLogin}/>
+      {
+        isLogin ? <Header userHandler={logoutHandler} isLogin={isLogin}/>
+        : <Header userHandler={loginHandler} isLogin={isLogin} />
+      }
+      
       <div className="mt-24 w-full flex flex-col h-screen flex-grow">
         <Routes>
           <Route path="/" element={<MainPage />} />

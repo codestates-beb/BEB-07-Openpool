@@ -1,9 +1,38 @@
 import {Request, Response} from "express";
 import crypto from "crypto";
 import web3 from "../config/web3";
+
+import AppDataSource from "../db/data-source";
 import User from "../entity/User";
 
 const jwt = require('jsonwebtoken');
+
+async function signup (address : string){
+  const createdAt = new Date().toISOString();
+  return await AppDataSource.createQueryBuilder()
+  .insert()
+  .into(User)
+  .values({
+    address,
+    name: "unname",
+    createdAt,
+  }).execute()
+  .then(result=>result)
+  .catch(console.log);
+}
+
+async function isUser(address : string){
+  const result = await AppDataSource.createQueryBuilder()
+  .select()
+  .from(User, "User")
+  .where("User.address = :address", {address})
+  .getOne();
+
+  console.log(result);
+
+  if (!result) return false;
+  else return true;
+}
 
 const createDataToSign = (req : Request, res : Response)=>{
     const dataToSign = crypto.randomBytes(16).toString("base64url");
@@ -11,26 +40,25 @@ const createDataToSign = (req : Request, res : Response)=>{
     else return res.status(200).send(dataToSign);
 }
 
-const signup = (req : Request, res : Response)=>{
-
-}
-
 const login = async (req : Request, res : Response)=> {
     const {dataToSign, signature, address} = req.body;
-    const addressVerified = web3.eth.accounts.recover(dataToSign, signature)
-
+    const addressVerified = web3.eth.accounts.recover(dataToSign, signature).toLowerCase()
+    
     if (addressVerified !== address){
         return res.status(404).send("login failed");
     } else {
-       const accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
-       const refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});
-       res.cookie('refreshToken',refreshToken, {httpOnly:true,});
-       return res.json({data:{accessToken}, message:"ok"});
+      if (! await isUser(address)) await signup(address);
+
+      let accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
+      let refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});
+      res.cookie('refreshToken',refreshToken, {httpOnly:true,});
+      return res.json({data:{accessToken}, message:"ok"});
     }
 }
 
 const logout = (req : Request, res : Response)=>{
   const refreshToken = req.cookies.refreshToken;
+
   if(!refreshToken) {
     return res.status(400).send({message: "refresh token not provided"});
   }

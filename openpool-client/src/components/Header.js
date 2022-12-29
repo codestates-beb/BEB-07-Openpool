@@ -3,15 +3,17 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 
 // Heroicons
-import WalletIcon from "@heroicons/react/24/outline/WalletIcon";
+import WalletIconOutline from "@heroicons/react/24/outline/WalletIcon";
+import WalletIconSolid from "@heroicons/react/24/solid/WalletIcon";
 import ShopingCartIcon from "@heroicons/react/24/outline/ShoppingCartIcon"
-import UserCircleIcon from "@heroicons/react/24/outline/UserCircleIcon";
+import UserCircleIconOutline from "@heroicons/react/24/outline/UserCircleIcon";
+import UserCircleIconSolid from "@heroicons/react/24/solid/UserCircleIcon";
 
 // stylesheet
 import "../assets/css/header.css";
 
 
-const Header = ({loginHandler, isLogin})=>{
+const Header = ({userHandler, isLogin})=>{
     // 헤더는 각 nav 요소에 원래 dropdown이 구현되어있습니다.
     // 가능하면 구현하는데 없어도 상관은 없을 듯 합니다.
 
@@ -26,19 +28,22 @@ const Header = ({loginHandler, isLogin})=>{
                 </div>
             </div>{/* 브랜드로고 */}
             <div className="searchbar-wrapper w-full px-16">
-                <input className="searchbar" placeholder="Search items, collections, and accounts"></input>
+                <input className="searchbar" placeholder="Search items, collections, and accounts" disabled={true}></input>
             </div>
             <nav>
                 <ul className="link-group flex items-center">
                     <li className="link-item"><Link to="/detail">Explore</Link></li>
                     <li className="link-item">
-                        <Link to="/Mypage">  
-                            <UserCircleIcon className="h-10 w-10" onClick={loginHandler}/>
+                        <Link to="/Mypage">
+                            <UserCircleIconOutline className="h-10 w-10" />
                         </Link>
                     </li>
                     <li className="link-item">
                         <Link>
-                            <WalletIcon className="h-10 w-10"/>
+                            {isLogin ? 
+                                <WalletIconSolid className="h-10 w-10" onClick={userHandler}/>
+                                : <WalletIconOutline className="h-10 w-10" onClick={userHandler}/>
+                            }
                         </Link>
                     </li>
                     <li className="link-item">

@@ -97,6 +97,7 @@ const createMetadata = (req : Request, res : Response)=>{
         path.join(__dirname + "/../../public/json", filename),
         metadataJSON,
     );
+    
 
     const param = {
         'Bucket' : BUCKET_NAME,
