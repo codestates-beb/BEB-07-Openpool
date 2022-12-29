@@ -7,15 +7,14 @@ const cookieParser = require('cookie-parser');
 
 router.use(cookieParser());
 
+router.use("/address", userController.requestAddrInfo);
+
+router.use("/balance", userController.requestBalanceOf);
+
 router.get("/datatosign", userController.createDataToSign);
 
 router.post("/login", userController.login);
-//여기바꿈
-/* router.post("/logout", (req: Request, res: Response)=>{
-})
 
-router.post("/verify", (req: Request, res: Response)=>{
-}) */
 router.post("/logout", userController.logout);
 
 router.post("/verify", userController.verify);
