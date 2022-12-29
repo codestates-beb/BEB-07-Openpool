@@ -2,14 +2,11 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {useParams} from "react-router";
 import axios from 'axios';
+import whatIsNft from "../assets/images/what-is-nft.png";
+import { ethers } from 'ethers';
 
-//images
-
-//css
-import "../assets/css/detail.css";
-
-//hooks
-import useMetamask from '../hooks/useMetamask';
+import openNFTABI from "../contracts/openNFTABI.json"
+import openNFTBytesCode from "../contracts/openNFTBytescode.json";
 
 const DetailPage = () => {
   const {contract, tokenId} = useParams();
@@ -19,7 +16,25 @@ const DetailPage = () => {
   const [owner, setOwner] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [img, setImg] = useState('')
+  const [imgSrc, setImgSrc] = useState('')
+
+
+  const mintingNFT = async ()=>{
+  
+    const myContractWithSigner = await provider.send("eth_requestAccounts", [])
+      .then( _=>provider.getSigner())
+      .then(signer=>myContract.connect(signer));
+  
+    myContractWithSigner.functions.mintNFT(ethereum.selectedAddress, setImgSrc(imgSrc));
+    myContract.name().then(console.log);
+  }
+  
+  const ethereum = window.ethereum;
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const myContract = new ethers.Contract(openNFTBytesCode, openNFTABI, provider);
+  
+  
+
   
   const requestDetailOfNFT = async()=>{
     const tokenURI = await axios.get("http://localhost:4000/contract/tokenuri/" +`${contract}/${tokenId}`)
@@ -58,7 +73,8 @@ const DetailPage = () => {
     </h2>
     <div className="lg:w-4/6 mx-auto">
       <div className="rounded-lg h-64 overflow-hidden">
-        <img className="object-cover object-center h-full w-full" src={img} alt="" />
+        <img onChange={(e) => setImgSrc(e.target.value)} value= {imgSrc}
+        className="object-cover object-center h-full w-full" src={whatIsNft} alt="" />
       </div>
       <div className="flex flex-col sm:flex-row mt-10">
         <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
@@ -88,7 +104,8 @@ const DetailPage = () => {
       <div class="container px-5 py-24 mx-auto">
     <div class="lg:w-2/3 flex flex-col sm:flex-row sm:items-center items-start mx-auto">
       <h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">부가설명 기타</h1>
-      <button 
+      <button onClick={mintingNFT}
+      type="submit" 
       class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0">
         Buy</button> 
         {/* 버튼 누르면 가격에 따라 구매할 수 있게끔 스마트 컨트랙트 */}

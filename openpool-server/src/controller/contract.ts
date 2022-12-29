@@ -23,7 +23,7 @@ const getSupportInterfaceSelector = web3.eth.abi.encodeFunctionSignature("interf
 const getSymbolSelector = web3.eth.abi.encodeFunctionSignature("symbol()");
 const getTokenByIndexSelector = web3.eth.abi.encodeFunctionSignature("Index(uint256)");
 const getTokenOfOwnerByIndexSelector = web3.eth.abi.encodeFunctionSignature("owner(address),index(uint256");
-const getTokenURISelector = web3.eth.abi.encodeFunctionSignature("tokenURI(uint256)");
+const getTokenURISelector = web3.eth.abi.encodeFunctionSignature("tokenId(uint256)");
 const getTotalSupplySelector = web3.eth.abi.encodeFunctionSignature("totalSupply()");
 
 async function getBalanceOf(address : string, owner : string) {
@@ -188,7 +188,8 @@ async function getTokenOfOwnerByIndex(address : string, owner : string, index : 
 
 async function getTokenURI(address : string, tokenId : number){
     const tokenIdEncoded = web3.eth.abi.encodeParameter("uint256" , tokenId);
-    const dataEncoded = getTokenURISelector + tokenIdEncoded.substring(2);
+    const dataEncoded = getTokenURISelector + tokenIdEncoded;
+
     const result = await web3.eth.call({
         to: address,
         data: dataEncoded
@@ -198,7 +199,7 @@ async function getTokenURI(address : string, tokenId : number){
 
     if (!result) return false;
 
-    return web3.eth.abi.decodeParameter("string",result);
+    return web3.utils.toUtf8(result);
 }
 
 async function getTotalSupply(address : string) {
@@ -232,18 +233,6 @@ const registerContract = async (req : Request, res : Response)=>{
     return res.status(200).send("컨트랙트가 등록이 완료되었습니다.")
 }
 
-const giveTokenURI = async(req: Request, res: Response)=>{
-    const contract = req.params.contract;
-    const tokenId = Number(req.params.tokenId);
-
-    const result = await getTokenURI(contract, tokenId)
-    .then(res=>res)
-    .catch(console.log);
-
-    if(!result) return res.status(404).send("찾으시는 정보가 없습니다.");
-    return res.status(200).send(result)
-}
-
 const test = async (req: Request, res: Response)=>{
     if (!req.body.address) return res.status(400).send("입력이 잘못되었습니다.");
     const address = req.body.address;
@@ -259,6 +248,5 @@ const test = async (req: Request, res: Response)=>{
 
 export default {
     registerContract,
-    giveTokenURI,
     test,
 }
