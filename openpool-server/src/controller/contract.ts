@@ -39,7 +39,7 @@ async function getBalanceOf(address : string, owner : string) {
 
     if (!result) return false;
 
-    return web3.utils.toUtf8(result);
+    return web3.utils.toNumber(result);
 
 }
 
@@ -56,7 +56,7 @@ async function getApproved(address : string, tokenId : number) {
 
     if (!result) return false;
 
-    return web3.utils.toUtf8(result);
+    return web3.eth.abi.decodeParameter("address",result).toLowerCase();
 }
 
 async function getIsApprovedForAll(address : string, owner : string, operator : string) {
@@ -103,7 +103,7 @@ async function getOwner(address : string){
 
     if (!result) return false;
 
-    return web3.utils.toUtf8(result);
+    return web3.eth.abi.decodeParameter("address",result).toLowerCase();
 }
 
 async function getOwnerOf(address : string, tokenId : number){
@@ -119,7 +119,7 @@ async function getOwnerOf(address : string, tokenId : number){
 
     if (!result) return false;
 
-    return web3.utils.toUtf8(result);
+    return web3.utils.toBN(result);
 }
 
 async function getSupportInterface(address : string, interfaceId : string) {
@@ -214,7 +214,7 @@ async function getTotalSupply(address : string) {
 
     if (!result) return false;
 
-    return web3.utils.toUtf8(result);
+    return web3.utils.toNumber(result);
 }
 
 const registerContract = async (req : Request, res : Response)=>{
@@ -233,6 +233,20 @@ const registerContract = async (req : Request, res : Response)=>{
     return res.status(200).send("컨트랙트가 등록이 완료되었습니다.")
 }
 
+const test = async (req: Request, res: Response)=>{
+    if (!req.body.address) return res.status(400).send("입력이 잘못되었습니다.");
+    const address = req.body.address;
+
+    const owner = await getOwner(address);
+    console.log(owner);
+
+    const totalSupply = await getTotalSupply(address);
+    console.log(totalSupply);
+
+    return res.status(200).send(owner);
+}
+
 export default {
     registerContract,
+    test,
 }
