@@ -1,6 +1,6 @@
 // modules
 import { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 // stylesheets
@@ -23,7 +23,9 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [userAccount, setUserAccount] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const navigation = useNavigate();
   const metamask = useMetamask();
+
 
 
   const getAccount = async ()=>{
@@ -80,6 +82,7 @@ function App() {
 
     setIsLogin(false);
     setAccessToken("");
+    navigation("/");
   }
 
   useEffect(()=>{
@@ -109,7 +112,7 @@ function App() {
   }, [setIsLogin])
 
   return (
-    <BrowserRouter>
+    <>
       {
         isLogin ? <Header userHandler={logoutHandler} isLogin={isLogin}/>
         : <Header userHandler={loginHandler} isLogin={isLogin} />
@@ -126,7 +129,7 @@ function App() {
         </Routes>
       </div>
       <Footer/>
-    </BrowserRouter>
+    </>
   );
 }
 
