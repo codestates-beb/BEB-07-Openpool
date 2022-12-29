@@ -97,7 +97,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/detail" element={<DetailPage />} />
+          <Route path="/detail" element={<DetailPage isLogin={isLogin}  />} />
           <Route path="/minting" element={<MintingPage isLogin={isLogin}/>} />
           {/* <Route path=":id"/> */}
           {/* </Route> */}

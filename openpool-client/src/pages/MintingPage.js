@@ -16,7 +16,7 @@ import useMetamask from "../hooks/useMetamask"
 
 
 // 이름 링크 설명 블록체인 
-function Minting({isLogin}) { // isLogin을 어디서든 사용가능,,,
+function Minting( {isLogin},  ) { // isLogin을 어디서든 사용가능,,,
   const [nftName, setNftName] = useState("");
   const [imgSrc, setImgSrc] = useState("");
   const [description, setDescription] = useState("");
@@ -29,9 +29,7 @@ function Minting({isLogin}) { // isLogin을 어디서든 사용가능,,,
 
     const [image_url, setImageUrl] = useState(""); // 서버에서 받아오는 이미지
 
-    // imgPreView
-    const [imgBase64, setImgBase64] = useState(''); 
-    const [imgFile, setImgFile] = useState(null);
+
 
     const changeHandler = (e) => {
       const file = e.target.files[0];
@@ -68,6 +66,7 @@ function Minting({isLogin}) { // isLogin을 어디서든 사용가능,,,
   //Web3 관련
   const metamask = useMetamask();
   const [contracts, setContracts] = useState("");
+  
   
 
   // Goerli network가 아니라면 전환
@@ -137,12 +136,21 @@ const createMetadata = async ()=>{
     return result.url;
 }
 
-const mintingNFT = async ()=>{
+const mintingNFT = async ()=>{ 
+  try{
   const token_uri = await createMetadata(); 
+ 
+  await contracts.mintNFT(token_uri);
+  } catch (err) {
+    console.log(err);
+  }
+}  
+
 
   // NFT 민팅을 스마트 컨트랙트에서 실행한다. 의 로직을 작성
   // 결과값을 표현하거나 redirect 하거나 즉, 만들어졌을때 어떻게 표현할건지?
-}
+  // 로딩페이지... isLoading 
+
 
 
     return(
@@ -215,7 +223,7 @@ const mintingNFT = async ()=>{
                         autoComplete="collection-name"
                         className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       >
-                        <option>{setContracts}</option>
+                        <option>{createContract}0x4e5e76fed68e5a0456059ac46a0bae5623c522fc</option>
 
                       </select>
                     </div>
@@ -262,8 +270,10 @@ const mintingNFT = async ()=>{
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                <div>
+                </div>
                   <button
- 
+                    onClick={mintingNFT}
                     type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
