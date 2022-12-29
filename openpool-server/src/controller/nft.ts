@@ -1,6 +1,7 @@
 // modules
 import {Request, Response} from "express";
 import path from "path";
+import {URL, Url} from "url";
 import fs from "fs";
 import crypto from "crypto";
 import storage from "../config/s3Config"
@@ -43,7 +44,6 @@ const getNFTs = async (req : Request, res : Response)=>{
 
 const uploadImage = (req : Request, res : Response)=>{
     if (!req.file) return res.status(404).send("이미지가 포함되어있지 않습니다.");
-
     const file : Express.Multer.File = req.file;
     const imageName = encodeURIComponent(file.filename);
 
@@ -67,9 +67,9 @@ const uploadImage = (req : Request, res : Response)=>{
         'Key': imageName
     };
     storage.getSignedUrl('putObject', urlParam, function(err, url) {
-        // const pos1 = url.indexOf('.png');
-        // const image_url = url.substring(0,pos1+4);
-        return res.status(202).send({url});
+        const urlParsed = new URL(url);
+        const image_url = urlParsed.origin + urlParsed.pathname;
+        return res.status(202).send({image_url});
     });
 }
 
@@ -99,7 +99,6 @@ const createMetadata = (req : Request, res : Response)=>{
         metadataJSON,
     );
     
-
     const param = {
         'Bucket' : BUCKET_NAME,
         'Key': filename,
