@@ -16,6 +16,7 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
   const navigation = useNavigate();
 
   const [userContracts, setUserContracts] = useState([]);
+  const [isMinting, setIsMinting] = useState(false);
 
   // 메타에디어 변수
   const [nftName, setNftName] = useState("");
@@ -100,6 +101,7 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
   }
 
   const mintingNFT = async ()=>{ 
+    setIsMinting(true);
     const tokenURL = await createMetadata();
     const web3 = new Web3();
 
@@ -117,7 +119,18 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
     }]}).then(result=>result)
     .catch(console.log);
 
-    console.log(resultMinting);
+    const checkTxInterval = setInterval(async()=>{
+      const receipt = await metamask.request({
+          method:"eth_getTransactionReceipt",
+          params:[resultMinting]
+      })
+      
+      if (!receipt) return;
+      else {
+          setIsMinting(false);
+          clearInterval(checkTxInterval);
+      }
+    }, 5000)
   }
 
 
@@ -243,14 +256,18 @@ function Minting( {isLogin, userAccount}) { // isLogin을 어디서든 사용가
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-              <div>
-              </div>
+              {isMinting ? 
+                <div className="flex justify-end">
+                  <img className="h-10 w-10" src={process.env.PUBLIC_URL+"images/loading.gif"}/>
+                </div>
+              :
                 <button type="button"
                   onClick={mintingNFT}
                   className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   Make own your NFT
                 </button>
+              }
               </div>
             </div>
           </form>

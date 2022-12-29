@@ -82,12 +82,12 @@ const MyPage = ({userAccount})=>{
                         <p className="text-lg align-top">{userAccount}</p>
                     </div>
                 </div>
-                <div className="flex w-full justify-evenly">
-                    <div className="lg:w-[400px] w-[200px] border p-6 rounded-lg">
+                <div className="flex w-full justify-evenly mt-10">
+                    <div className="w-full mr-2 border p-6 rounded-lg">
                         <h2 className="">스마트 컨트랙트 등록</h2>
                         <div>
                             <input 
-                                className="w-full py-4 px-2" 
+                                className="w-full border rounded-lg mt-4 py-2 px-2" 
                                 placeholder="보유하신 스마트 컨트랙트 주소를 입력해주세요."
                                 onChange={(e)=>{setAddressToRegister(e.target.value)}}
                                 value={addressToRegister}
@@ -106,7 +106,7 @@ const MyPage = ({userAccount})=>{
                             
                         </div>
                     </div>
-                    <div className="lg:w-[400px] w-[200px] border p-6 rounded-lg">
+                    <div className="w-full ml-2 border p-6 rounded-lg">
                         <h2>스마트 컨트랙트 생성</h2>
                         <p>{CaddressCreated}</p>
                         <div className="button-group flex justify-center mt-6">
