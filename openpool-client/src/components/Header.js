@@ -31,14 +31,8 @@ const Header = ({userHandler, isLogin})=>{
                 <input className="searchbar" placeholder="Search items, collections, and accounts" disabled={true}></input>
             </div>
             <nav>
-                <ul className="link-group flex items-center">
-                    <li className="link-item"><Link to="/detail">Explore</Link></li>
-                    <li className="link-item">
-                        <Link to="/Mypage">
-                            <UserCircleIconOutline className="h-10 w-10" />
-                        </Link>
-                    </li>
-                    <li className="link-item">
+                <ul className="link-group flex items-center pr-3">
+                <li className="link-item px-3">
                         <Link>
                             {isLogin ? 
                                 <WalletIconSolid className="h-10 w-10" onClick={userHandler}/>
@@ -46,9 +40,15 @@ const Header = ({userHandler, isLogin})=>{
                             }
                         </Link>
                     </li>
-                    <li className="link-item">
+                    <li className="link-item px-3"><Link to="/detail">Detail</Link></li>
+                    <li className="link-item px-3">
+                        <Link to="/Mypage">
+                            <UserCircleIconOutline className="h-10 w-10" />
+                        </Link>
+                    </li>
+                    <li className="link-item px-3">
                         <Link to="/minting">
-                            <ShopingCartIcon className="h-10 w-10"/>
+                            <p2>Create</p2>
                         </Link>
                     </li>
                 </ul>
