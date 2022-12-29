@@ -1,29 +1,64 @@
-import "../assets/css/detail.css";
+//modules
 import React, {useEffect, useState, useRef} from 'react';
+import {useParams} from "react-router";
 import axios from 'axios';
-import whatIsNft from "../assets/images/what-is-nft.png";
+
+//images
+
+//css
+import "../assets/css/detail.css";
+
+//hooks
+import useMetamask from '../hooks/useMetamask';
 
 const DetailPage = () => {
-  
+  const {contract, tokenId} = useParams();
+  const metamask = useMetamask();
+
   const [nftName, setNftName] = useState('');
-  const [builder, setBuilder] = useState('');
+  const [owner, setOwner] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [img, setImg] = useState('')
+  
+  const requestDetailOfNFT = async()=>{
+    const tokenURI = await axios.get("http://localhost:4000/contract/tokenuri/" +`${contract}/${tokenId}`)
+    .then(result=> result.data)
+    .catch(console.log);
 
+    if(tokenURI){
+      const metadata = await axios.get(tokenURI)
+      .then(result=>result.data)
+      .catch(console.log);
 
+      if(metadata){
+        setNftName(metadata.name);
+        setImg(metadata.image);
+        setDescription(metadata.description);
+      }
+    }
+    else{
+      const nftMetadata = await axios.get("http://localhost:4000/nft/" + `${contract}/${tokenId}`)
+      .then(result=> result.data)
+      .catch(console.log);
+    }
+  }
 
+  useEffect(()=>{
+    requestDetailOfNFT();
+  })
   
   return (
     
 <section className="text-gray-600 body-font">
   
   <div className="container px-5 py-24 mx-auto flex flex-col content-center p-2">
-  <h2 onChange={(e)=> setNftName(e.target.value)} value = {nftName} 
-  className="font-bold title-font mb-8 text-gray-900 text-2xl text-center">NFT 이름</h2>
+    <h2 className="font-bold title-font mb-8 text-gray-900 text-2xl text-center">
+      {nftName}
+    </h2>
     <div className="lg:w-4/6 mx-auto">
       <div className="rounded-lg h-64 overflow-hidden">
-        <img className="object-cover object-center h-full w-full" src={whatIsNft} alt="" />
+        <img className="object-cover object-center h-full w-full" src={img} alt="" />
       </div>
       <div className="flex flex-col sm:flex-row mt-10">
         <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
@@ -34,23 +69,27 @@ const DetailPage = () => {
             </svg>
           </div>
           <div className="flex flex-col items-center text-center justify-center">
-            <h2 onChange={(e)=> setBuilder(e.target.value)} value={builder} 
-            className="font-medium title-font mt-4 text-gray-900 text-lg">만든 사람 </h2>
+            <h2 className="font-medium title-font mt-4 text-gray-900 text-lg">
+              {owner}
+            </h2>
             <div className="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
-            <p onChange={(e)=> setPrice(e.target.value)} value={price} 
-            className="text-base">1.00 Eth</p>
+            <p className="text-base">
+              1.00 Eth
+            </p>
           </div>
         </div>
         <div className="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
-          <p onChange={(e)=> setDescription(e.target.value)} value={description} 
-          className="leading-relaxed text-lg mb-4"> NFT 설명</p>          
+          <p className="leading-relaxed text-lg mb-4"> 
+            {description}
+          </p>          
         </div>
         
       </div>
       <div class="container px-5 py-24 mx-auto">
     <div class="lg:w-2/3 flex flex-col sm:flex-row sm:items-center items-start mx-auto">
       <h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">부가설명 기타</h1>
-      <button 
+      <button onClick={mintingNFT}
+      type="submit" 
       class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0">
         Buy</button> 
         {/* 버튼 누르면 가격에 따라 구매할 수 있게끔 스마트 컨트랙트 */}

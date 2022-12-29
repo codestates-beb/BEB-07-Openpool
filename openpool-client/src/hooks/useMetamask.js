@@ -27,3 +27,7 @@ const useMetamask = ()=>{
 }
 
 export default useMetamask;
+
+
+// 모든 컴포넌트의 handler에 isLogin 확인해줘야함...
+// useEffect로 초기 렌더링 값 isLogin 
