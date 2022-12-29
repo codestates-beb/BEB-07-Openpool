@@ -1,6 +1,9 @@
 //modules
 import {useState, useEffect } from "react";
 
+//contracts
+import openNFTBytesCode from "../contracts/openNFTBytescode.json";
+
 //hooks
 import useMetamask from "../hooks/useMetamask";
 
@@ -10,6 +13,37 @@ const MyPage = ()=>{
     const registerContractHandler = ()=>{
         
     }
+
+    // 컨트랙트 생성에 필요한 함수입니다.
+    // 컨트랙트를 생성하는 트랜잭션 주소를 반환합니다.
+    const createContract = async ()=>{
+        const account = await metamask.request({method:"eth_requestAccounts"})
+        const curAccount = account[0];
+        if(!curAccount) return;
+
+        const estimateGasfee = await metamask.request({
+            method:"eth_estimateGas", 
+            params:[{from: curAccount, data : "0x"+openNFTBytesCode.object}]
+        })
+        
+        const createContractTxHash = await metamask.request({
+            method:"eth_sendTransaction", 
+            params:[{
+                from:curAccount, 
+                gas:estimateGasfee, 
+                data: "0x"+openNFTBytesCode.object
+            }]
+        })
+
+        const contractAddress = await metamask.request({
+            method:"eth_getTransactionReceipt",
+            params:[{
+            hash: createContractTxHash
+            }]
+        }).then(res=>res.contractAddress);
+        
+        return contractAddress;
+    };
 
     return(
         <div className="flex w-full justify-center">

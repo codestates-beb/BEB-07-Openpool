@@ -22,11 +22,19 @@ const useMetamask = ()=>{
             const chaindId = await window.ethereum.request({method:"eth_chainId"});
             if(chaindId !== "0x5"){
                 const isChange = await window.ethereum
-                .request({method:"wallet_switchEthereumChain", params:[{chaindId:"0x5"}]})
+                .request({method:"wallet_switchEthereumChain", params:[{chainId:"0x5"}]})
                 .catch(err=>err);
 
                 if(!isChange) return;
             };
+
+            window.ethereum.on("chainChanged", async(_chaindId)=>{
+                const isChange = await window.ethereum
+                .request({method:"wallet_switchEthereumChain", params:[{chainId:"0x5"}]})
+                .catch(err=>err);
+            
+                if(!isChange) metamask = null;
+              })
 
             setMetamask(window.ethereum);
         })()
@@ -36,7 +44,3 @@ const useMetamask = ()=>{
 }
 
 export default useMetamask;
-
-
-// 모든 컴포넌트의 handler에 isLogin 확인해줘야함...
-// useEffect로 초기 렌더링 값 isLogin 

@@ -18,7 +18,7 @@ const Header = ({userHandler, isLogin})=>{
     // 가능하면 구현하는데 없어도 상관은 없을 듯 합니다.
 
     return (
-        <header className="py-4 px-16 w-full flex justify-between items-center position: absolute;">
+        <header className="lg:py-4 lg:px-16 py-2 px-8 w-full flex justify-between items-center position: absolute;">
             <div className="logo-group flex items-center">
                 <div className="logo-wrapper h-10 w-10 mr-2">
                     <Link to="/"><img className="w-full " src={process.env.PUBLIC_URL + "/images/logo.png"}/></Link>
@@ -27,7 +27,7 @@ const Header = ({userHandler, isLogin})=>{
                     <Link to="/" className="text-2xl font-bold">OpenPool</Link>
                 </div>
             </div>{/* 브랜드로고 */}
-            <div className="searchbar-wrapper w-full px-16">
+            <div className="searchbar-wrapper hidden lg:block w-full px-16">
                 <input className="searchbar" placeholder="Search items, collections, and accounts" disabled={true}></input>
             </div>
             <nav>
@@ -40,7 +40,6 @@ const Header = ({userHandler, isLogin})=>{
                             }
                         </Link>
                     </li>
-                    <li className="link-item px-3"><Link to="/detail">Detail</Link></li>
                     <li className="link-item px-3">
                         <Link to="/Mypage">
                             <UserCircleIconOutline className="h-10 w-10" />
@@ -48,7 +47,7 @@ const Header = ({userHandler, isLogin})=>{
                     </li>
                     <li className="link-item px-3">
                         <Link to="/minting">
-                            <p2>Create</p2>
+                            <p>Create</p>
                         </Link>
                     </li>
                 </ul>
