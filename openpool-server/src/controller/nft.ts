@@ -29,11 +29,6 @@ interface Metadata {
     youtube_url?: string
 }
 
-function refinePath(path : string){
-    path = path.replace("public", "");
-    return path;
-}
-
 const getNFTs = async (req : Request, res : Response)=>{
     const NFTs = await AppDataSource.getRepository(NFT).find()
     .catch(error=>error);
@@ -122,13 +117,66 @@ const createMetadata = (req : Request, res : Response)=>{
         const token_url = url.substring(0,pos1+5);
         return res.status(202).send({token_url});
     });
-    
 }
 
+const after_minting_request_insert = async (req:Request, res: Response) => {
+    const info = {
+        tokenId: req.body.tokenId,
+        name: req.body.name,
+        token_url: req.body.token_url,
+        image_url: req.body.image_url,
+        contract: req.body.contract,
+        owner: req.body.owner
+    }
 
+    const userRepo = AppDataSource.getRepository(NFT);
+    const user = userRepo.create(info);
+    await userRepo
+        .save(user)
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((err) => console.log(err));   
+
+};
+
+const my_NFT = async(req:Request, res:Response) => {
+    const address = req.query.address as string;
+    const userRepo = AppDataSource.getRepository(NFT);
+    await userRepo
+        .find({
+            where: {
+                owner:address
+            }
+        })
+        .then((data) => {
+            return res.status(200).send(data);
+        })
+        .catch((err) => {return res.status(400).send(err)});
+}
+
+const one_NFT = async (req:Request, res:Response) => {
+    const contract = req.params.contract as string;
+    const tokenId = Number(req.params.tokenId);
+    const userRepo = AppDataSource.getRepository(NFT);
+    await userRepo
+    .findOne({
+        where: {
+            contract: contract,
+            tokenId: tokenId
+        }
+    })
+    .then((data) => {
+        return res.status(200).send(data);
+    })
+    .catch((err) => {return res.status(400).send(err)});
+}
 
 export default {
     getNFTs,
     uploadImage,
     createMetadata,
+    after_minting_request_insert,
+    my_NFT,
+    one_NFT,
 }
