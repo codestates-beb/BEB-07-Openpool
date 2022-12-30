@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 
 async function signup (address : string){
   const createdAt = new Date().toISOString();
-  return await AppDataSource.createQueryBuilder()
+  const result = await AppDataSource.createQueryBuilder()
   .insert()
   .into(User)
   .values({
@@ -17,20 +17,17 @@ async function signup (address : string){
     name: "unname",
     createdAt,
   }).execute()
-  .then(result=>result)
-  .catch(console.log);
+
+  return result;
 }
 
 async function isUser(address : string){
-  const result = await AppDataSource.createQueryBuilder()
-  .select()
-  .from(User, "User")
-  .where("User.address = :address", {address})
-  .getOne();
+  const result = await AppDataSource.getRepository(User)
+  .createQueryBuilder("user")
+  .where("user.address = :address", {address})
+  .getOne()
 
-  console.log(result);
-
-  if (!result) return false;
+  if (result === null) return false;
   else return true;
 }
 
@@ -83,7 +80,8 @@ const login = async (req : Request, res : Response)=> {
     if (addressVerified !== address){
         return res.status(404).send("login failed");
     } else {
-      if (! await isUser(address)) await signup(address);
+      const checkUser : any = await isUser(address);
+      if (!checkUser) await signup(address);
 
       let accessToken = jwt.sign({address}, process.env.ACCESS_SECRET, {expiresIn:'1m'});
       let refreshToken = jwt.sign({address}, process.env.REFRESH_SECRET, {expiresIn:'1d'});

@@ -52,13 +52,13 @@ const DetailPage = () => {
     
 <section className="text-gray-600 body-font">
   
-  <div className="container px-5 py-24 mx-auto flex flex-col content-center p-2">
+  <div className="container border rounded-lg px-5 py-24 mx-auto flex flex-col content-center p-2">
     <h2 className="font-bold title-font mb-8 text-gray-900 text-2xl text-center">
-      {nftName}
+      {nftName ? nftName: "항목 없음"}
     </h2>
     <div className="lg:w-4/6 mx-auto">
-      <div className="rounded-lg h-64 overflow-hidden">
-        <img className="object-cover object-center h-full w-full" src={img} alt="" />
+      <div className="rounded-lg border h-64 overflow-hidden">
+        <img className="object-cover object-center h-full w-full" src={img ? img : process.env.PUBLIC_URL + "/images/none.png"} alt="" />
       </div>
       <div className="flex flex-col sm:flex-row mt-10">
         <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
@@ -80,7 +80,7 @@ const DetailPage = () => {
         </div>
         <div className="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
           <p className="leading-relaxed text-lg mb-4"> 
-            {description}
+            {description ? description: "항목 없음"}
           </p>          
         </div>
         
@@ -88,7 +88,7 @@ const DetailPage = () => {
       <div class="container px-5 py-24 mx-auto">
     <div class="lg:w-2/3 flex flex-col sm:flex-row sm:items-center items-start mx-auto">
       <h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">부가설명 기타</h1>
-      <button onClick={mintingNFT}
+      <button
       type="submit" 
       class="flex-shrink-0 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg mt-10 sm:mt-0">
         Buy</button> 

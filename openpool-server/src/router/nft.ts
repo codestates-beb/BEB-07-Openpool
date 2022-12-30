@@ -15,4 +15,10 @@ router.post("/image", upload.single("image"), NFTController.uploadImage);
 
 router.post("/metadata", NFTController.createMetadata);
 
+router.post("/", NFTController.after_minting_request_insert);
+
+router.get("/", NFTController.my_NFT);
+
+router.get("/:contract/:tokenId", NFTController.one_NFT);
+
 export default router;
